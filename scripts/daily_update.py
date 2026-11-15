@@ -33,14 +33,20 @@ def main() -> None:
     end = dt.date.today()
     start = end - dt.timedelta(days=WINDOW_DAYS)
 
-    data_through = None
-    try:
-        meta = api.fetch_meta("drug")
-        raw_updated = meta.get("last_updated")
-        if raw_updated:
-            data_through = dt.datetime.strptime(raw_updated, "%Y-%m-%d").date()
-    except api.OpenFDAError as exc:
-        print(f"warning: could not read openFDA meta: {exc}")
+    # Freshness is per endpoint: drug, food and device publish on their own
+    # schedules, so track each one's last_updated instead of implying one
+    # universal date. The chart shades from the freshest common cutoff.
+    endpoint_updated: dict[str, dt.date] = {}
+    for product in api.ENDPOINTS:
+        try:
+            meta = api.fetch_meta(product)
+            raw_updated = meta.get("last_updated")
+            if raw_updated:
+                endpoint_updated[product] = dt.datetime.strptime(
+                    raw_updated, "%Y-%m-%d").date()
+        except api.OpenFDAError as exc:
+            print(f"warning: could not read openFDA meta for {product}: {exc}")
+    data_through = min(endpoint_updated.values()) if endpoint_updated else None
 
     records: list[dict] = []
     for product in api.ENDPOINTS:
@@ -71,7 +77,8 @@ def main() -> None:
     summary = analyze.summarize(records)
     spotlight = analyze.most_severe(records)
     (REPORTS / "daily_report.md").write_text(
-        report.render_markdown(summary, spotlight, start, end, data_through),
+        report.render_markdown(summary, spotlight, start, end, data_through,
+                               endpoint_updated=endpoint_updated),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

@@ -16,10 +16,16 @@ CLASS_ORDER = ["Class I", "Class II", "Class III"]
 def render_markdown(summary: dict, spotlight: list[dict],
                     window_start: dt.date, window_end: dt.date,
                     data_through: dt.date | None = None,
-                    generated_at: dt.datetime | None = None) -> str:
+                    generated_at: dt.datetime | None = None,
+                    endpoint_updated: dict[str, dt.date] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
-    freshness = (f"openFDA data published through {data_through}. "
-                 if data_through else "")
+    if endpoint_updated:
+        parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
+        freshness = f"openFDA last_updated by endpoint: {parts}. "
+    elif data_through:
+        freshness = f"openFDA data published through {data_through}. "
+    else:
+        freshness = ""
     lines = [
         "# FDA Recall Radar - daily report",
         "",

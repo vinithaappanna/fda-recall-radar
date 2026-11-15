@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-16 to 2026-11-15 (by report date). openFDA data published through 2026-11-04. Generated 2026-11-15 19:56 UTC.
+Window: 2026-10-16 to 2026-11-15 (by report date). openFDA data published through 2026-11-04. Generated 2026-11-15 20:06 UTC.
 
 **343 recalls** across 3 active days.
 
