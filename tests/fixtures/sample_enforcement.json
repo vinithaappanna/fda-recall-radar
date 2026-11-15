@@ -1,0 +1,65 @@
+[
+  {
+    "recall_number": "D-001-2027",
+    "report_date": "20261110",
+    "classification": "Class I",
+    "product_type": "Drugs",
+    "recalling_firm": "Acme Pharma",
+    "reason_for_recall": "Presence of particulate matter in injectable product.",
+    "status": "Ongoing"
+  },
+  {
+    "recall_number": "D-002-2027",
+    "report_date": "20261110",
+    "classification": "Class II",
+    "product_type": "Drugs",
+    "recalling_firm": "Acme Pharma",
+    "reason_for_recall": "Labeling mix-up on outer carton.",
+    "status": "Ongoing"
+  },
+  {
+    "recall_number": "F-003-2027",
+    "report_date": "20261112",
+    "classification": "Class I",
+    "product_type": "Food",
+    "recalling_firm": "Fresh Farms Co",
+    "reason_for_recall": "Possible Salmonella contamination.",
+    "status": "Ongoing"
+  },
+  {
+    "recall_number": "F-004-2027",
+    "report_date": "20261113",
+    "classification": "Class III",
+    "product_type": "Food",
+    "recalling_firm": "SnackWorks",
+    "reason_for_recall": "Undeclared color additive.",
+    "status": "Terminated"
+  },
+  {
+    "recall_number": "Z-005-2027",
+    "report_date": "20261113",
+    "classification": "Class II",
+    "product_type": "Devices",
+    "recalling_firm": "MediDevice Inc",
+    "reason_for_recall": "Software anomaly may delay alarm.",
+    "status": "Ongoing"
+  },
+  {
+    "recall_number": "D-001-2027",
+    "report_date": "20261110",
+    "classification": "Class I",
+    "product_type": "Drugs",
+    "recalling_firm": "Acme Pharma",
+    "reason_for_recall": "Duplicate row of D-001-2027 for dedupe testing.",
+    "status": "Ongoing"
+  },
+  {
+    "recall_number": "F-006-2027",
+    "report_date": "",
+    "classification": "Class II",
+    "product_type": "Food",
+    "recalling_firm": "Fresh Farms Co",
+    "reason_for_recall": "Record with missing report_date.",
+    "status": "Ongoing"
+  }
+]
