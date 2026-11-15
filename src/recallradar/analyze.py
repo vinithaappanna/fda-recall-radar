@@ -51,6 +51,21 @@ def recalls_by_day(records: list[dict]) -> list[tuple[dt.date, int]]:
     return sorted(counts.items())
 
 
+def daily_series(records: list[dict], start: dt.date, end: dt.date) -> list[tuple[dt.date, int]]:
+    """Recall counts for every day in [start, end], with explicit zeros.
+
+    Days without recalls are missing from the source data, not zero - fill
+    them so charts show the real window instead of only active days.
+    """
+    counts = dict(recalls_by_day(records))
+    series = []
+    day = start
+    while day <= end:
+        series.append((day, counts.get(day, 0)))
+        day += dt.timedelta(days=1)
+    return series
+
+
 def most_severe(records: list[dict], n: int = 5) -> list[dict]:
     """Most severe records: Class I first, ties broken by newest report date."""
     def key(rec: dict):

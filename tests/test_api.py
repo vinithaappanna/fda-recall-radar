@@ -70,3 +70,14 @@ def test_fetch_raises_on_server_error():
 def test_fetch_rejects_unknown_product_area():
     with pytest.raises(ValueError):
         api.fetch_enforcement("cosmetics", dt.date(2026, 11, 1), dt.date(2026, 11, 15))
+
+
+def test_fetch_meta_returns_meta_block():
+    session = FakeSession([FakeResponse(200, {"meta": {"last_updated": "2026-11-04"}})])
+    assert api.fetch_meta("drug", session=session)["last_updated"] == "2026-11-04"
+
+
+def test_fetch_meta_raises_on_error():
+    session = FakeSession([FakeResponse(500, {})])
+    with pytest.raises(api.OpenFDAError):
+        api.fetch_meta("food", session=session)

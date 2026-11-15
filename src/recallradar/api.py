@@ -31,6 +31,17 @@ def date_range_query(field: str, start: dt.date, end: dt.date) -> str:
     return f"{field}:[{fda_date(start)} TO {fda_date(end)}]"
 
 
+def fetch_meta(product: str, session=None) -> dict:
+    """Return the openFDA meta block (includes last_updated) for an endpoint."""
+    if product not in ENDPOINTS:
+        raise ValueError(f"unknown product area {product!r}; expected one of {ENDPOINTS}")
+    http = session or requests.Session()
+    resp = http.get(f"{BASE_URL}/{product}/enforcement.json", params={"limit": 1}, timeout=30)
+    if resp.status_code != 200:
+        raise OpenFDAError(f"openFDA returned {resp.status_code} for {product} meta")
+    return resp.json().get("meta", {})
+
+
 def fetch_enforcement(product: str, start: dt.date, end: dt.date,
                       session=None, max_pages: int = MAX_PAGES) -> list[dict]:
     """Fetch enforcement reports for one product area over an inclusive date range.

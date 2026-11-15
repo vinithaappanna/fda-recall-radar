@@ -1,5 +1,9 @@
 # FDA Recall Radar
 
+![tests](https://github.com/vinithaappanna/fda-recall-radar/actions/workflows/tests.yml/badge.svg)
+
+![FDA recalls per day](reports/recalls_last_30d.png)
+
 A self-updating data project that tracks U.S. FDA enforcement reports (recalls)
 across drugs, food and medical devices. Every day it pulls the last 30 days of
 reports from the [openFDA](https://open.fda.gov/) API, archives new recalls into
@@ -38,7 +42,9 @@ python -m pytest                 # run the test suite
 `scripts/daily_update.py` is idempotent: re-running it only archives recalls it
 has not seen before. It runs once a day and each run is merged back to `main`,
 so the history file and report grow day by day. New analysis features and tests
-are added on a daily cadence too.
+are added on a daily cadence too. The latest generated report lives at
+[reports/daily_report.md](reports/daily_report.md); days openFDA has not
+published yet are shaded on the chart.
 
 ## Notes
 

@@ -51,6 +51,18 @@ def test_most_severe_prefers_class_one_then_newest(sample_records):
     assert spotlight[0]["recall_number"] == "F-003-2027"  # Class I, 11/12 beats 11/10
 
 
+def test_daily_series_fills_missing_days_with_zero(sample_records):
+    series = dict(analyze.daily_series(sample_records, dt.date(2026, 11, 9), dt.date(2026, 11, 14)))
+    assert len(series) == 6
+    assert series[dt.date(2026, 11, 9)] == 0
+    assert series[dt.date(2026, 11, 11)] == 0
+    assert series[dt.date(2026, 11, 10)] == 3
+
+
+def test_daily_series_empty_range():
+    assert analyze.daily_series([], dt.date(2026, 11, 10), dt.date(2026, 11, 9)) == []
+
+
 def test_summarize_empty():
     summary = analyze.summarize([])
     assert summary["total"] == 0

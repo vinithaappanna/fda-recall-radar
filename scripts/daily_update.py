@@ -33,6 +33,15 @@ def main() -> None:
     end = dt.date.today()
     start = end - dt.timedelta(days=WINDOW_DAYS)
 
+    data_through = None
+    try:
+        meta = api.fetch_meta("drug")
+        raw_updated = meta.get("last_updated")
+        if raw_updated:
+            data_through = dt.datetime.strptime(raw_updated, "%Y-%m-%d").date()
+    except api.OpenFDAError as exc:
+        print(f"warning: could not read openFDA meta: {exc}")
+
     records: list[dict] = []
     for product in api.ENDPOINTS:
         for rec in api.fetch_enforcement(product, start, end):
@@ -62,9 +71,11 @@ def main() -> None:
     summary = analyze.summarize(records)
     spotlight = analyze.most_severe(records)
     (REPORTS / "daily_report.md").write_text(
-        report.render_markdown(summary, spotlight, start, end), encoding="utf-8"
+        report.render_markdown(summary, spotlight, start, end, data_through),
+        encoding="utf-8",
     )
-    if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png", WINDOW_DAYS):
+    if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
+                                start, end, data_through):
         print("wrote chart")
     print("wrote reports/daily_report.md")
 

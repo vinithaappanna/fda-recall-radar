@@ -8,19 +8,22 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from .analyze import recalls_by_day
+from .analyze import daily_series
 
 CLASS_ORDER = ["Class I", "Class II", "Class III"]
 
 
 def render_markdown(summary: dict, spotlight: list[dict],
                     window_start: dt.date, window_end: dt.date,
+                    data_through: dt.date | None = None,
                     generated_at: dt.datetime | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
+    freshness = (f"openFDA data published through {data_through}. "
+                 if data_through else "")
     lines = [
         "# FDA Recall Radar - daily report",
         "",
-        f"Window: {window_start} to {window_end} (by report date). "
+        f"Window: {window_start} to {window_end} (by report date). {freshness}"
         f"Generated {generated_at:%Y-%m-%d %H:%M} UTC.",
         "",
         f"**{summary['total']} recalls** across {summary['days_with_recalls']} active days.",
@@ -55,16 +58,26 @@ def render_markdown(summary: dict, spotlight: list[dict],
     return "\n".join(lines)
 
 
-def plot_daily_counts(records: list[dict], out_path, window_days: int = 30) -> bool:
-    by_day = recalls_by_day(records)
-    if not by_day:
+def plot_daily_counts(records: list[dict], out_path,
+                      window_start: dt.date, window_end: dt.date,
+                      data_through: dt.date | None = None) -> bool:
+    series = daily_series(records, window_start, window_end)
+    if not series:
         return False
-    days = [d for d, _ in by_day]
-    counts = [c for _, c in by_day]
+    days = [d for d, _ in series]
+    counts = [c for _, c in series]
     fig, ax = plt.subplots(figsize=(9, 4))
     ax.bar(days, counts, color="#2b8a3e")
-    ax.set_title(f"FDA recalls per day (last {window_days} days)")
+    ax.set_title(f"FDA recalls per day, {window_start} to {window_end}")
     ax.set_ylabel("recalls")
+    ax.margins(x=0.01)
+    if data_through and data_through < window_end:
+        ax.axvspan(data_through + dt.timedelta(days=0.5), window_end,
+                   color="grey", alpha=0.12)
+        midpoint = data_through + (window_end - data_through) / 2
+        ax.annotate("not yet published by openFDA",
+                    xy=(midpoint, ax.get_ylim()[1] * 0.5),
+                    ha="center", fontsize=8, color="grey")
     fig.autofmt_xdate()
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
