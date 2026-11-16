@@ -18,8 +18,9 @@ DATA = ROOT / "data"
 REPORTS = ROOT / "reports"
 WINDOW_DAYS = 30
 
-FIELDNAMES = ["recall_number", "report_date", "classification", "product_type",
-              "recalling_firm", "reason_for_recall", "status", "source_endpoint"]
+FIELDNAMES = ["recall_number", "report_date", "recall_initiation_date",
+              "classification", "product_type", "recalling_firm",
+              "reason_for_recall", "status", "source_endpoint"]
 
 
 def load_history(path: Path) -> dict:
@@ -63,11 +64,18 @@ def main() -> None:
     history_path = DATA / "recalls_history.csv"
     history = load_history(history_path)
     new = 0
+    enriched = 0
     for rec in records:
         key = rec.get("recall_number")
-        if key and key not in history:
+        if not key:
+            continue
+        if key not in history:
             history[key] = {name: rec.get(name, "") for name in FIELDNAMES}
             new += 1
+        elif analyze.backfill_fields(history[key], rec, ["recall_initiation_date"]):
+            enriched += 1
+    if enriched:
+        print(f"backfilled recall_initiation_date on {enriched} archived recalls")
     with history_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=FIELDNAMES)
         writer.writeheader()
@@ -76,9 +84,10 @@ def main() -> None:
 
     summary = analyze.summarize(records)
     spotlight = analyze.most_severe(records)
+    lag = analyze.lag_summary(records)
     (REPORTS / "daily_report.md").write_text(
         report.render_markdown(summary, spotlight, start, end, data_through,
-                               endpoint_updated=endpoint_updated),
+                               endpoint_updated=endpoint_updated, lag=lag),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

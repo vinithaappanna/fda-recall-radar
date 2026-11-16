@@ -68,3 +68,39 @@ def test_summarize_empty():
     assert summary["total"] == 0
     assert summary["first_day"] is None
     assert summary["days_with_recalls"] == 0
+
+
+def test_backfill_fills_only_blanks():
+    from recallradar.analyze import backfill_fields
+    archived = {"recall_number": "D-1", "recall_initiation_date": ""}
+    fresh = {"recall_number": "D-1", "recall_initiation_date": "20261001"}
+    assert backfill_fields(archived, fresh, ["recall_initiation_date"]) is True
+    assert archived["recall_initiation_date"] == "20261001"
+    # an existing value is never overwritten
+    fresh["recall_initiation_date"] = "20261111"
+    assert backfill_fields(archived, fresh, ["recall_initiation_date"]) is False
+    assert archived["recall_initiation_date"] == "20261001"
+
+
+def test_reporting_lag_skips_incomplete_and_inverted_records():
+    from recallradar.analyze import reporting_lag_days
+    records = [
+        {"recall_initiation_date": "20261001", "report_date": "20261011"},  # 10
+        {"recall_initiation_date": "", "report_date": "20261011"},          # missing
+        {"recall_initiation_date": "20261011"},                             # missing report
+        {"recall_initiation_date": "20261020", "report_date": "20261011"},  # inverted
+        {"recall_initiation_date": "not-a-date", "report_date": "20261011"},
+    ]
+    assert reporting_lag_days(records) == [10]
+
+
+def test_lag_summary_median_p90_max():
+    from recallradar.analyze import lag_summary
+    assert lag_summary([]) == {"count": 0, "median": None, "p90": None, "max": None}
+    records = [{"recall_initiation_date": "20261001",
+                "report_date": f"202610{day:02d}"} for day in range(2, 12)]
+    out = lag_summary(records)
+    assert out["count"] == 10
+    assert out["median"] == 5.5  # lags 1..10
+    assert out["max"] == 10
+    assert 1 <= out["p90"] <= 10

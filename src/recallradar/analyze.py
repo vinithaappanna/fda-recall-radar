@@ -89,3 +89,48 @@ def summarize(records: list[dict]) -> dict:
         "first_day": by_day[0][0] if by_day else None,
         "last_day": by_day[-1][0] if by_day else None,
     }
+
+
+def backfill_fields(existing: dict, fresh: dict, fields: list[str]) -> bool:
+    """Fill blank fields on an archived record from a fresh fetch.
+
+    Returns True when anything changed. Existing values always win - this
+    only enriches records archived before a field was tracked.
+    """
+    changed = False
+    for name in fields:
+        if not existing.get(name) and fresh.get(name):
+            existing[name] = fresh[name]
+            changed = True
+    return changed
+
+
+def reporting_lag_days(records: list[dict]) -> list[int]:
+    """Days from recall initiation to the enforcement report, per record.
+
+    Records missing either date, with unparseable dates, or with the report
+    dated before the initiation (source-data noise) are skipped.
+    """
+    lags = []
+    for rec in records:
+        raw_init, raw_rep = rec.get("recall_initiation_date"), rec.get("report_date")
+        if not raw_init or not raw_rep:
+            continue
+        try:
+            lag = (parse_report_date(raw_rep) - parse_report_date(raw_init)).days
+        except ValueError:
+            continue
+        if lag >= 0:
+            lags.append(lag)
+    return lags
+
+
+def lag_summary(records: list[dict]) -> dict:
+    """Median/p90/max reporting lag over records that have both dates."""
+    lags = sorted(reporting_lag_days(records))
+    if not lags:
+        return {"count": 0, "median": None, "p90": None, "max": None}
+    mid = len(lags) // 2
+    median = lags[mid] if len(lags) % 2 else (lags[mid - 1] + lags[mid]) / 2
+    p90 = lags[min(len(lags) - 1, int(len(lags) * 0.9))]
+    return {"count": len(lags), "median": median, "p90": p90, "max": lags[-1]}
