@@ -8,7 +8,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from .analyze import daily_series
+from .analyze import classification_counts, daily_series
 
 CLASS_ORDER = ["Class I", "Class II", "Class III"]
 
@@ -58,6 +58,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
         "",
         "![Recalls per day](recalls_last_30d.png)",
         "",
+        "![Recalls by severity class](recalls_by_class.png)",
+        "",
         "Data: [openFDA](https://open.fda.gov/) enforcement reports. Not medical advice.",
         "",
     ]
@@ -85,6 +87,32 @@ def plot_daily_counts(records: list[dict], out_path,
                     xy=(midpoint, ax.get_ylim()[1] * 0.5),
                     ha="center", fontsize=8, color="grey")
     fig.autofmt_xdate()
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return True
+
+
+def plot_classification_share(records: list[dict], out_path) -> bool:
+    """Horizontal bar chart of recalls by severity class for the window."""
+    counts = classification_counts(records)
+    total = sum(counts.values())
+    if not total:
+        return False
+    classes = [c for c in CLASS_ORDER if counts.get(c)]
+    values = [counts[c] for c in classes]
+    colors = {"Class I": "#c92a2a", "Class II": "#e8590c", "Class III": "#868e96"}
+    fig, ax = plt.subplots(figsize=(7, 2.8))
+    bars = ax.barh(classes, values, color=[colors[c] for c in classes])
+    for bar, val in zip(bars, values):
+        ax.annotate(f"{val} ({val / total:.0%})",
+                    xy=(bar.get_width(), bar.get_y() + bar.get_height() / 2),
+                    xytext=(4, 0), textcoords="offset points",
+                    va="center", fontsize=9)
+    ax.set_title("Recalls by FDA severity class")
+    ax.set_xlabel("recalls")
+    ax.margins(x=0.18)
+    ax.invert_yaxis()  # Class I (most severe) on top
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

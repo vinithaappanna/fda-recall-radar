@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-16 to 2026-11-15 (by report date). openFDA last_updated by endpoint: device 2026-11-04, drug 2026-11-04, food 2026-11-04. Generated 2026-11-15 20:10 UTC.
+Window: 2026-10-17 to 2026-11-16 (by report date). openFDA last_updated by endpoint: device 2026-11-04, drug 2026-11-04, food 2026-11-04. Generated 2026-11-16 12:08 UTC.
 
 **343 recalls** across 3 active days.
 
@@ -42,5 +42,7 @@ Window: 2026-10-16 to 2026-11-15 (by report date). openFDA last_updated by endpo
 - **Class I** (20261104): FORTUNA MARKETING, INC - Broccoli seeds potentially contaminated with Salmonella
 
 ![Recalls per day](recalls_last_30d.png)
+
+![Recalls by severity class](recalls_by_class.png)
 
 Data: [openFDA](https://open.fda.gov/) enforcement reports. Not medical advice.

@@ -67,3 +67,18 @@ def test_plot_without_freshness_still_renders(tmp_path):
     ]
     out = tmp_path / "chart.png"
     assert report.plot_daily_counts(records, out, START, END) is True
+
+
+def test_classification_share_chart(tmp_path):
+    records = [
+        {"classification": "Class I", "report_date": "20261101"},
+        {"classification": "Class II", "report_date": "20261102"},
+        {"classification": "Class II", "report_date": "20261103"},
+    ]
+    out = tmp_path / "class.png"
+    assert report.plot_classification_share(records, out) is True
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_classification_share_empty_returns_false(tmp_path):
+    assert report.plot_classification_share([], tmp_path / "x.png") is False

@@ -84,6 +84,8 @@ def main() -> None:
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
                                 start, end, data_through):
         print("wrote chart")
+    if report.plot_classification_share(records, REPORTS / "recalls_by_class.png"):
+        print("wrote class chart")
     print("wrote reports/daily_report.md")
 
 
