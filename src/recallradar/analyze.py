@@ -134,3 +134,16 @@ def lag_summary(records: list[dict]) -> dict:
     median = lags[mid] if len(lags) % 2 else (lags[mid - 1] + lags[mid]) / 2
     p90 = lags[min(len(lags) - 1, int(len(lags) * 0.9))]
     return {"count": len(lags), "median": median, "p90": p90, "max": lags[-1]}
+
+
+def lag_by_classification(records: list[dict]) -> dict[str, dict]:
+    """Reporting-lag summary per classification (Class I/II/III/Unknown).
+
+    Shows whether the most severe recalls reach the enforcement report
+    faster or slower than the rest.
+    """
+    groups: dict[str, list[dict]] = {}
+    for rec in records:
+        groups.setdefault(rec.get("classification") or "Unknown", []).append(rec)
+    return {cls: lag_summary(recs) for cls, recs in groups.items()
+            if lag_summary(recs)["count"]}

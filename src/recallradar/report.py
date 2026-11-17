@@ -18,7 +18,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     data_through: dt.date | None = None,
                     generated_at: dt.datetime | None = None,
                     endpoint_updated: dict[str, dt.date] | None = None,
-                    lag: dict | None = None) -> str:
+                    lag: dict | None = None,
+                    lag_by_class: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -52,6 +53,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
             f"{lag['count']} recalls in the window with both dates: "
             f"median **{lag['median']}**, p90 {lag['p90']}, longest {lag['max']}.",
         ]
+    if lag_by_class:
+        lines += ["", "| Classification | Recalls | Median lag | p90 |",
+                  "| --- | ---: | ---: | ---: |"]
+        for cls in CLASS_ORDER:
+            if cls in lag_by_class:
+                row = lag_by_class[cls]
+                lines.append(f"| {cls} | {row['count']} | {row['median']} | {row['p90']} |")
     lines += ["", "## Top recalling firms", ""]
     for firm, count in summary["top_firms"]:
         lines.append(f"- {firm} ({count})")

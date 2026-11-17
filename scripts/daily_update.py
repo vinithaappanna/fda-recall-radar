@@ -87,7 +87,8 @@ def main() -> None:
     lag = analyze.lag_summary(records)
     (REPORTS / "daily_report.md").write_text(
         report.render_markdown(summary, spotlight, start, end, data_through,
-                               endpoint_updated=endpoint_updated, lag=lag),
+                               endpoint_updated=endpoint_updated, lag=lag,
+                               lag_by_class=analyze.lag_by_classification(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

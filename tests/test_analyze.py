@@ -104,3 +104,28 @@ def test_lag_summary_median_p90_max():
     assert out["median"] == 5.5  # lags 1..10
     assert out["max"] == 10
     assert 1 <= out["p90"] <= 10
+
+
+def test_lag_by_classification_groups_and_skips_empty():
+    from recallradar.analyze import lag_by_classification
+    records = [
+        {"classification": "Class I", "recall_initiation_date": "20261001", "report_date": "20261011"},
+        {"classification": "Class I", "recall_initiation_date": "20261001", "report_date": "20261021"},
+        {"classification": "Class II", "recall_initiation_date": "20261001", "report_date": "20261006"},
+        {"classification": "Class III", "recall_initiation_date": "", "report_date": "20261006"},
+    ]
+    out = lag_by_classification(records)
+    assert set(out) == {"Class I", "Class II"}  # Class III has no usable lag
+    assert out["Class I"]["median"] == 15.0
+    assert out["Class II"]["count"] == 1
+
+
+def test_report_renders_lag_by_class_table():
+    import datetime as dt
+    from recallradar import report
+    md = report.render_markdown(
+        {"total": 1, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+        [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
+        lag={"count": 2, "median": 5, "p90": 6, "max": 6},
+        lag_by_class={"Class I": {"count": 2, "median": 5, "p90": 6, "max": 6}})
+    assert "| Class I | 2 | 5 | 6 |" in md

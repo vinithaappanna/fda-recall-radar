@@ -1,49 +1,55 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-17 to 2026-11-16 (by report date). openFDA last_updated by endpoint: device 2026-11-04, drug 2026-11-04, food 2026-11-04. Generated 2026-11-16 20:07 UTC.
+Window: 2026-10-18 to 2026-11-17 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-17 12:05 UTC.
 
-**343 recalls** across 3 active days.
+**464 recalls** across 4 active days.
 
 ## By severity
 
 | Classification | Recalls |
 | --- | ---: |
-| Class I | 41 |
-| Class II | 265 |
-| Class III | 36 |
+| Class I | 62 |
+| Class II | 363 |
+| Class III | 37 |
 
 ## By product area
 
 | Product type | Recalls |
 | --- | ---: |
-| Devices | 181 |
-| Food | 94 |
-| Drugs | 68 |
+| Devices | 235 |
+| Drugs | 124 |
+| Food | 105 |
 
 ## Reporting lag
 
-Days from recall initiation to the enforcement report, over the 343 recalls in the window with both dates: median **47**, p90 65, longest 835.
+Days from recall initiation to the enforcement report, over the 464 recalls in the window with both dates: median **43.0**, p90 65, longest 917.
+
+| Classification | Recalls | Median lag | p90 |
+| --- | ---: | ---: | ---: |
+| Class I | 62 | 41.0 | 65 |
+| Class II | 363 | 43 | 65 |
+| Class III | 37 | 65 | 65 |
 
 ## Top recalling firms
 
 - El Ruisenor De Mexico, Inc. (61)
+- Victory Medical Center Pharmacy (42)
 - Boston Scientific Cork, Ltd. (41)
 - Medline Industries, LP (32)
 - ABC Compounding Co., Inc. (19)
 - PRITAM INTERNATIONAL PRIVATE LIMITED (17)
+- Henry Schein Inc. (13)
 - Ventec Life Systems, Inc. (12)
+- Cardinal Health 200, LLC (11)
 - PHILIPS MEDICAL SYSTEMS NEDERLAND B.V. (9)
-- Pentax of America Inc (5)
-- Medtronic, Inc. (4)
-- Howmedica Osteonics Corp. (4)
 
 ## Highest-severity recalls in the window
 
-- **Class I** (20261104): GF Blends Inc - Products are recalled due to potential undeclared wheat gluten
-- **Class I** (20261104): EDEN BROTHERS - Salmonella
-- **Class I** (20261104): Oliva on Main - contains undeclared sesame
-- **Class I** (20261104): Oliva on Main - contains undeclared sesame
-- **Class I** (20261104): FORTUNA MARKETING, INC - Broccoli seeds potentially contaminated with Salmonella
+- **Class I** (20261111): Family Farmstead Dairy, LLC - Potential contamination with E. coli (pathogenic non-O157 STEC).
+- **Class I** (20261111): Krasnyi Oktyabr Inc - Contaminated with Listeria monocytogenes
+- **Class I** (20261111): Krasnyi Oktyabr Inc - Contaminated with Listeria monocytogenes
+- **Class I** (20261111): Lidl US TRADING - Listeria monocytogenes. The firm received positive test result of Listeria monocytogenes in the product.
+- **Class I** (20261111): Lockout Industries, LLC - FDA analysis revealed the presence of undeclared sildenafil.
 
 ![Recalls per day](recalls_last_30d.png)
 
