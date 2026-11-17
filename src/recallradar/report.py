@@ -20,7 +20,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     endpoint_updated: dict[str, dt.date] | None = None,
                     lag: dict | None = None,
                     lag_by_class: dict | None = None,
-                    repeaters: list[dict] | None = None) -> str:
+                    repeaters: list[dict] | None = None,
+                    severity_by_product: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -64,6 +65,14 @@ def render_markdown(summary: dict, spotlight: list[dict],
     lines += ["", "## Top recalling firms", ""]
     for firm, count in summary["top_firms"]:
         lines.append(f"- {firm} ({count})")
+    if severity_by_product:
+        lines += ["", "## Severity by product area", "",
+                  "| Product type | Class I | Class II | Class III | Class I share |",
+                  "| --- | ---: | ---: | ---: | ---: |"]
+        for ptype, c in sorted(severity_by_product.items()):
+            total = sum(c.values())
+            share = f"{c['Class I'] / total:.0%}" if total else "-"
+            lines.append(f"| {ptype} | {c['Class I']} | {c['Class II']} | {c['Class III']} | {share} |")
     if repeaters:
         lines += ["", "## Repeat recallers", "",
                   "Firms with 3+ recalls in the window (a supplier-risk signal).", "",

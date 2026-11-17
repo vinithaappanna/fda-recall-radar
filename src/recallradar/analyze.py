@@ -164,3 +164,15 @@ def repeat_recallers(records: list[dict], min_recalls: int = 3, n: int = 5) -> l
         f["class_i"] += rec.get("classification") == "Class I"
     out = [f for f in firms.values() if f["recalls"] >= min_recalls]
     return sorted(out, key=lambda f: (-f["recalls"], -f["class_i"], f["firm"]))[:n]
+
+
+def severity_by_product(records: list[dict]) -> dict[str, dict[str, int]]:
+    """Cross-tab: product type -> {classification: count}, every class present."""
+    out: dict[str, dict[str, int]] = {}
+    for rec in records:
+        row = out.setdefault(rec.get("product_type") or "Unknown",
+                             {"Class I": 0, "Class II": 0, "Class III": 0})
+        cls = rec.get("classification")
+        if cls in row:
+            row[cls] += 1
+    return out

@@ -152,3 +152,24 @@ def test_report_renders_repeat_recallers():
         [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
         repeaters=[{"firm": "Acme", "recalls": 4, "class_i": 1}])
     assert "## Repeat recallers" in md and "| Acme | 4 | 1 |" in md
+
+
+def test_severity_by_product_crosstab():
+    from recallradar.analyze import severity_by_product
+    recs = [{"product_type": "Drugs", "classification": "Class I"},
+            {"product_type": "Drugs", "classification": "Class II"},
+            {"product_type": "Food", "classification": "Class III"},
+            {"product_type": "Food", "classification": "Weird"}]
+    out = severity_by_product(recs)
+    assert out["Drugs"] == {"Class I": 1, "Class II": 1, "Class III": 0}
+    assert out["Food"] == {"Class I": 0, "Class II": 0, "Class III": 1}  # unknown class ignored
+
+
+def test_report_renders_severity_by_product():
+    import datetime as dt
+    from recallradar import report
+    md = report.render_markdown(
+        {"total": 1, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+        [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
+        severity_by_product={"Drugs": {"Class I": 1, "Class II": 3, "Class III": 0}})
+    assert "| Drugs | 1 | 3 | 0 | 25% |" in md
