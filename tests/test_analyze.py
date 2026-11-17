@@ -129,3 +129,26 @@ def test_report_renders_lag_by_class_table():
         lag={"count": 2, "median": 5, "p90": 6, "max": 6},
         lag_by_class={"Class I": {"count": 2, "median": 5, "p90": 6, "max": 6}})
     assert "| Class I | 2 | 5 | 6 |" in md
+
+
+def test_repeat_recallers_threshold_and_order():
+    from recallradar.analyze import repeat_recallers
+    recs = ([{"recalling_firm": "A", "classification": "Class I"}] * 2
+            + [{"recalling_firm": "A", "classification": "Class II"}]
+            + [{"recalling_firm": "B", "classification": "Class II"}] * 3
+            + [{"recalling_firm": "C", "classification": "Class I"}] * 2)
+    out = repeat_recallers(recs)
+    assert [f["firm"] for f in out] == ["A", "B"]  # tie on 3 recalls: more Class I first
+    assert out[0] == {"firm": "A", "recalls": 3, "class_i": 2}
+    assert repeat_recallers(recs, min_recalls=2)[-1]["firm"] == "C"
+    assert repeat_recallers([]) == []
+
+
+def test_report_renders_repeat_recallers():
+    import datetime as dt
+    from recallradar import report
+    md = report.render_markdown(
+        {"total": 1, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+        [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
+        repeaters=[{"firm": "Acme", "recalls": 4, "class_i": 1}])
+    assert "## Repeat recallers" in md and "| Acme | 4 | 1 |" in md

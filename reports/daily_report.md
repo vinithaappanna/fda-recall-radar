@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-18 to 2026-11-17 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-17 12:05 UTC.
+Window: 2026-10-18 to 2026-11-17 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-17 15:05 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -42,6 +42,18 @@ Days from recall initiation to the enforcement report, over the 464 recalls in t
 - Ventec Life Systems, Inc. (12)
 - Cardinal Health 200, LLC (11)
 - PHILIPS MEDICAL SYSTEMS NEDERLAND B.V. (9)
+
+## Repeat recallers
+
+Firms with 3+ recalls in the window (a supplier-risk signal).
+
+| Firm | Recalls | Class I |
+| --- | ---: | ---: |
+| El Ruisenor De Mexico, Inc. | 61 | 5 |
+| Victory Medical Center Pharmacy | 42 | 0 |
+| Boston Scientific Cork, Ltd. | 41 | 0 |
+| Medline Industries, LP | 32 | 0 |
+| ABC Compounding Co., Inc. | 19 | 0 |
 
 ## Highest-severity recalls in the window
 

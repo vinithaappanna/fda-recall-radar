@@ -19,7 +19,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     generated_at: dt.datetime | None = None,
                     endpoint_updated: dict[str, dt.date] | None = None,
                     lag: dict | None = None,
-                    lag_by_class: dict | None = None) -> str:
+                    lag_by_class: dict | None = None,
+                    repeaters: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -63,6 +64,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
     lines += ["", "## Top recalling firms", ""]
     for firm, count in summary["top_firms"]:
         lines.append(f"- {firm} ({count})")
+    if repeaters:
+        lines += ["", "## Repeat recallers", "",
+                  "Firms with 3+ recalls in the window (a supplier-risk signal).", "",
+                  "| Firm | Recalls | Class I |", "| --- | ---: | ---: |"]
+        for r in repeaters:
+            lines.append(f"| {r['firm']} | {r['recalls']} | {r['class_i']} |")
     lines += ["", "## Highest-severity recalls in the window", ""]
     for rec in spotlight:
         reason = (rec.get("reason_for_recall") or "no reason given")[:220]

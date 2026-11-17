@@ -147,3 +147,20 @@ def lag_by_classification(records: list[dict]) -> dict[str, dict]:
         groups.setdefault(rec.get("classification") or "Unknown", []).append(rec)
     return {cls: lag_summary(recs) for cls, recs in groups.items()
             if lag_summary(recs)["count"]}
+
+
+def repeat_recallers(records: list[dict], min_recalls: int = 3, n: int = 5) -> list[dict]:
+    """Firms with several recalls in the window, with their Class I count.
+
+    A firm appearing repeatedly, especially with Class I recalls, is a
+    supplier-risk signal for pharma, device and food buyers. Ties break on
+    Class I count, then name.
+    """
+    firms: dict[str, dict] = {}
+    for rec in records:
+        name = rec.get("recalling_firm") or "Unknown"
+        f = firms.setdefault(name, {"firm": name, "recalls": 0, "class_i": 0})
+        f["recalls"] += 1
+        f["class_i"] += rec.get("classification") == "Class I"
+    out = [f for f in firms.values() if f["recalls"] >= min_recalls]
+    return sorted(out, key=lambda f: (-f["recalls"], -f["class_i"], f["firm"]))[:n]
