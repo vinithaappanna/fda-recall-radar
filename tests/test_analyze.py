@@ -173,3 +173,22 @@ def test_report_renders_severity_by_product():
         [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
         severity_by_product={"Drugs": {"Class I": 1, "Class II": 3, "Class III": 0}})
     assert "| Drugs | 1 | 3 | 0 | 25% |" in md
+
+
+def test_status_breakdown_counts_shares_and_unknown():
+    from recallradar.analyze import status_breakdown
+    recs = [{"status": "Ongoing"}] * 3 + [{"status": "Terminated"}] + [{}]
+    out = status_breakdown(recs)
+    assert out[0] == ("Ongoing", 3, 0.6)
+    assert {s for s, _, _ in out} == {"Ongoing", "Terminated", "Unknown"}
+    assert status_breakdown([]) == []
+
+
+def test_report_renders_status_table():
+    import datetime as dt
+    from recallradar import report
+    md = report.render_markdown(
+        {"total": 1, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+        [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
+        statuses=[("Ongoing", 3, 0.75)])
+    assert "| Ongoing | 3 | 75% |" in md

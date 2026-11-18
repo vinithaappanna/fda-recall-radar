@@ -21,7 +21,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     lag: dict | None = None,
                     lag_by_class: dict | None = None,
                     repeaters: list[dict] | None = None,
-                    severity_by_product: dict | None = None) -> str:
+                    severity_by_product: dict | None = None,
+                    statuses: list[tuple] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -73,6 +74,10 @@ def render_markdown(summary: dict, spotlight: list[dict],
             total = sum(c.values())
             share = f"{c['Class I'] / total:.0%}" if total else "-"
             lines.append(f"| {ptype} | {c['Class I']} | {c['Class II']} | {c['Class III']} | {share} |")
+    if statuses:
+        lines += ["", "## Recall status", "", "| Status | Recalls | Share |", "| --- | ---: | ---: |"]
+        for st, n, share in statuses:
+            lines.append(f"| {st} | {n} | {share:.0%} |")
     if repeaters:
         lines += ["", "## Repeat recallers", "",
                   "Firms with 3+ recalls in the window (a supplier-risk signal).", "",

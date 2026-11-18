@@ -90,7 +90,8 @@ def main() -> None:
                                endpoint_updated=endpoint_updated, lag=lag,
                                lag_by_class=analyze.lag_by_classification(records),
                                repeaters=analyze.repeat_recallers(records),
-                               severity_by_product=analyze.severity_by_product(records)),
+                               severity_by_product=analyze.severity_by_product(records),
+                               statuses=analyze.status_breakdown(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

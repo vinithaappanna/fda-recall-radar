@@ -176,3 +176,11 @@ def severity_by_product(records: list[dict]) -> dict[str, dict[str, int]]:
         if cls in row:
             row[cls] += 1
     return out
+
+
+def status_breakdown(records: list[dict]) -> list[tuple[str, int, float]]:
+    """(status, count, share) for recall status (Ongoing, Completed,
+    Terminated...), largest first. Shows how much of the window is still open."""
+    counts = Counter(rec.get("status") or "Unknown" for rec in records)
+    total = sum(counts.values())
+    return [(st, n, n / total) for st, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))]
