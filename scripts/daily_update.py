@@ -95,7 +95,8 @@ def main() -> None:
                                repeaters=analyze.repeat_recallers(records),
                                severity_by_product=analyze.severity_by_product(records),
                                statuses=analyze.status_breakdown(records),
-                               unarchived=unkeyed),
+                               unarchived=unkeyed,
+                               weekly=analyze.weekly_counts(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

@@ -201,3 +201,29 @@ def test_report_notes_unarchived_recalls():
             [], dt.date(2026, 10, 1), dt.date(2026, 10, 30))
     assert "2 recalls with no recall_number" in report.render_markdown(*args, unarchived=2)
     assert "no recall_number" not in report.render_markdown(*args)
+
+
+def test_weekly_counts_groups_by_monday_and_skips_bad_dates():
+    import datetime as dt
+    from recallradar.analyze import weekly_counts
+    recs = [
+        {"report_date": "20261102", "classification": "Class I"},   # Monday
+        {"report_date": "20261108", "classification": "Class II"},  # Sunday, same week
+        {"report_date": "20261109", "classification": "Class I"},   # next Monday
+        {"report_date": "", "classification": "Class I"},
+        {"report_date": "bad"},
+    ]
+    out = weekly_counts(recs)
+    assert [w["week_start"] for w in out] == [dt.date(2026, 11, 2), dt.date(2026, 11, 9)]
+    assert out[0] == {"week_start": dt.date(2026, 11, 2), "recalls": 2, "class_i": 1}
+    assert weekly_counts([]) == []
+
+
+def test_report_renders_weekly_table():
+    import datetime as dt
+    from recallradar import report
+    md = report.render_markdown(
+        {"total": 1, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+        [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
+        weekly=[{"week_start": dt.date(2026, 11, 2), "recalls": 2, "class_i": 1}])
+    assert "| 2026-11-02 | 2 | 1 |" in md

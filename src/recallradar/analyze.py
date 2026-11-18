@@ -184,3 +184,19 @@ def status_breakdown(records: list[dict]) -> list[tuple[str, int, float]]:
     counts = Counter(rec.get("status") or "Unknown" for rec in records)
     total = sum(counts.values())
     return [(st, n, n / total) for st, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))]
+
+
+def weekly_counts(records: list[dict]) -> list[dict]:
+    """Recalls per ISO week (Monday start) with Class I counts, oldest first.
+    Records with a missing or unparseable report_date are skipped."""
+    weeks: dict[dt.date, dict] = {}
+    for rec in records:
+        try:
+            day = parse_report_date(rec.get("report_date") or "")
+        except ValueError:
+            continue
+        monday = day - dt.timedelta(days=day.weekday())
+        w = weeks.setdefault(monday, {"week_start": monday, "recalls": 0, "class_i": 0})
+        w["recalls"] += 1
+        w["class_i"] += rec.get("classification") == "Class I"
+    return [weeks[k] for k in sorted(weeks)]
