@@ -227,3 +227,38 @@ def test_report_renders_weekly_table():
         [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
         weekly=[{"week_start": dt.date(2026, 11, 2), "recalls": 2, "class_i": 1}])
     assert "| 2026-11-02 | 2 | 1 |" in md
+
+
+def test_reason_theme_keywords_and_priority():
+    from recallradar.analyze import reason_theme
+    assert reason_theme("Particulate matter identified in solution") == "Contamination / particulate"
+    assert reason_theme("Lack of Assurance of Sterility") == "Sterility"
+    assert reason_theme("CGMP Deviations") == "Manufacturing practice (CGMP)"
+    assert reason_theme("Undeclared milk allergen") == "Labeling / undeclared allergen"
+    assert reason_theme("Failed dissolution specification") == "Potency / dissolution / stability"
+    assert reason_theme("Contaminated; also CGMP deviations") == "Contamination / particulate"  # first wins
+    assert reason_theme("Lack of Processing Controls") == "Manufacturing practice (CGMP)"
+    assert reason_theme("Products lack 510(k) clearance.") == "Regulatory clearance"
+    assert reason_theme("Cybersecurity vulnerability in protocol") == "Software / cybersecurity"
+    assert reason_theme("main lift may unexpectedly drop") == "Device defect / performance"
+    assert reason_theme("something else") == "Other" and reason_theme(None) == "Other"
+
+
+def test_reason_theme_counts_sorted_with_class_i():
+    from recallradar.analyze import reason_theme_counts
+    recs = [{"reason_for_recall": "CGMP Deviations", "classification": "Class II"},
+            {"reason_for_recall": "CGMP deviations", "classification": "Class I"},
+            {"reason_for_recall": "Mold found", "classification": "Class I"}]
+    out = reason_theme_counts(recs)
+    assert out[0] == {"theme": "Manufacturing practice (CGMP)", "recalls": 2, "class_i": 1}
+    assert out[1]["theme"] == "Contamination / particulate" and out[1]["class_i"] == 1
+
+
+def test_report_renders_theme_table_labeled_heuristic():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                themes=[{"theme": "Sterility", "recalls": 3, "class_i": 1}])
+    assert "| Sterility | 3 | 1 |" in md and "not an FDA taxonomy" in md

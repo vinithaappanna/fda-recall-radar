@@ -24,7 +24,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     severity_by_product: dict | None = None,
                     statuses: list[tuple] | None = None,
                     unarchived: int = 0,
-                    weekly: list[dict] | None = None) -> str:
+                    weekly: list[dict] | None = None,
+                    themes: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -81,6 +82,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| --- | ---: | ---: |"]
         for w in weekly:
             lines.append(f"| {w['week_start']} | {w['recalls']} | {w['class_i']} |")
+    if themes:
+        lines += ["", "## Recall reason themes", "",
+                  "Keyword grouping of the free-text reason (illustrative heuristic, not an FDA taxonomy).", "",
+                  "| Theme | Recalls | Class I |", "| --- | ---: | ---: |"]
+        for t in themes:
+            lines.append(f"| {t['theme']} | {t['recalls']} | {t['class_i']} |")
     if statuses:
         lines += ["", "## Recall status", "", "| Status | Recalls | Share |", "| --- | ---: | ---: |"]
         for st, n, share in statuses:

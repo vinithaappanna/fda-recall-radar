@@ -200,3 +200,38 @@ def weekly_counts(records: list[dict]) -> list[dict]:
         w["recalls"] += 1
         w["class_i"] += rec.get("classification") == "Class I"
     return [weeks[k] for k in sorted(weeks)]
+
+
+REASON_THEMES = [
+    ("Contamination / particulate", ("particulate", "contaminat", "foreign", "glass", "metal", "mold", "microbial", "bacteria", "listeria", "salmonella", "e. coli")),
+    ("Sterility", ("steril", "endotoxin", "lack of assurance")),
+    ("Manufacturing practice (CGMP)", ("cgmp", "good manufacturing", "manufacturing practice", "processing control", "process control", "not processed")),
+    ("Labeling / undeclared allergen", ("label", "undeclared", "allergen", "misbrand", "packag")),
+    ("Potency / dissolution / stability", ("potency", "dissolution", "stability", "out of specification", "oos", "subpotent", "superpotent", "impurit")),
+    ("Software / cybersecurity", ("software", "cybersecurity", "vulnerab", "firmware", "ssd", "calibration")),
+    ("Regulatory clearance", ("510(k)", "clearance", "unapproved", "not approved")),
+    ("Device defect / performance", ("defective", "defect", "disconnect", "separation", "nonconform", "do not conform", "difficult", "unexpectedly", "performance", "adhesi", "mechanism", "fail", "kits contain", "swell", "valve", "wrong")),
+]
+
+
+def reason_theme(reason: str) -> str:
+    """Keyword heuristic mapping free-text recall reasons to a coarse theme.
+    First matching theme wins; unmatched reasons are 'Other'. Illustrative
+    grouping for triage, not an FDA taxonomy."""
+    text = (reason or "").lower()
+    for name, words in REASON_THEMES:
+        if any(w in text for w in words):
+            return name
+    return "Other"
+
+
+def reason_theme_counts(records: list[dict]) -> list[dict]:
+    """Per theme: recalls and Class I recalls, largest first (ties by name)."""
+    themes: dict[str, dict] = {}
+    for rec in records:
+        t = themes.setdefault(reason_theme(rec.get("reason_for_recall", "")),
+                              {"theme": "", "recalls": 0, "class_i": 0})
+        t["recalls"] += 1
+        t["class_i"] += rec.get("classification") == "Class I"
+    out = [dict(v, theme=k) for k, v in themes.items()]
+    return sorted(out, key=lambda r: (-r["recalls"], r["theme"]))

@@ -96,7 +96,8 @@ def main() -> None:
                                severity_by_product=analyze.severity_by_product(records),
                                statuses=analyze.status_breakdown(records),
                                unarchived=unkeyed,
-                               weekly=analyze.weekly_counts(records)),
+                               weekly=analyze.weekly_counts(records),
+                               themes=analyze.reason_theme_counts(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
