@@ -192,3 +192,12 @@ def test_report_renders_status_table():
         [], dt.date(2026, 10, 1), dt.date(2026, 10, 30),
         statuses=[("Ongoing", 3, 0.75)])
     assert "| Ongoing | 3 | 75% |" in md
+
+
+def test_report_notes_unarchived_recalls():
+    import datetime as dt
+    from recallradar import report
+    args = ({"total": 5, "days_with_recalls": 1, "by_classification": {}, "by_product_type": {}, "top_firms": []},
+            [], dt.date(2026, 10, 1), dt.date(2026, 10, 30))
+    assert "2 recalls with no recall_number" in report.render_markdown(*args, unarchived=2)
+    assert "no recall_number" not in report.render_markdown(*args)

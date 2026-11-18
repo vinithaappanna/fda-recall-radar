@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-19 to 2026-11-18 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-18 12:04 UTC.
+Window: 2026-10-19 to 2026-11-18 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-18 12:05 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -57,6 +57,8 @@ Days from recall initiation to the enforcement report, over the 464 recalls in t
 | --- | ---: | ---: |
 | Ongoing | 463 | 100% |
 | Completed | 1 | 0% |
+
+_Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 
 ## Repeat recallers
 

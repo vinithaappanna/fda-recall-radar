@@ -80,6 +80,9 @@ def main() -> None:
         writer = csv.DictWriter(fh, fieldnames=FIELDNAMES)
         writer.writeheader()
         writer.writerows(history.values())
+    unkeyed = sum(1 for rec in records if not rec.get("recall_number"))
+    if unkeyed:
+        print(f"note: {unkeyed} recalls have no recall_number: reported, not archived")
     print(f"archived {new} new recalls; history now holds {len(history)}")
 
     summary = analyze.summarize(records)
@@ -91,7 +94,8 @@ def main() -> None:
                                lag_by_class=analyze.lag_by_classification(records),
                                repeaters=analyze.repeat_recallers(records),
                                severity_by_product=analyze.severity_by_product(records),
-                               statuses=analyze.status_breakdown(records)),
+                               statuses=analyze.status_breakdown(records),
+                               unarchived=unkeyed),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

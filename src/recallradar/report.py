@@ -22,7 +22,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     lag_by_class: dict | None = None,
                     repeaters: list[dict] | None = None,
                     severity_by_product: dict | None = None,
-                    statuses: list[tuple] | None = None) -> str:
+                    statuses: list[tuple] | None = None,
+                    unarchived: int = 0) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -78,6 +79,9 @@ def render_markdown(summary: dict, spotlight: list[dict],
         lines += ["", "## Recall status", "", "| Status | Recalls | Share |", "| --- | ---: | ---: |"]
         for st, n, share in statuses:
             lines.append(f"| {st} | {n} | {share:.0%} |")
+    if unarchived:
+        lines += ["", f"_Window total includes {unarchived} recalls with no recall_number; "
+                      "they are reported here but cannot be keyed into the archive._"]
     if repeaters:
         lines += ["", "## Repeat recallers", "",
                   "Firms with 3+ recalls in the window (a supplier-risk signal).", "",
