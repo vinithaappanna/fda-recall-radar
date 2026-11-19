@@ -34,6 +34,7 @@ reports/            generated daily report and chart
 ```bash
 pip install -r requirements.txt
 python scripts/daily_update.py   # fetch, archive, regenerate report
+python scripts/query.py firm "par health"   # read-only archive lookups: recall, firm, theme
 python -m pytest                 # run the test suite
 ```
 
