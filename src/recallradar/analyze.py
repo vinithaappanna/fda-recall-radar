@@ -235,3 +235,14 @@ def reason_theme_counts(records: list[dict]) -> list[dict]:
         t["class_i"] += rec.get("classification") == "Class I"
     out = [dict(v, theme=k) for k, v in themes.items()]
     return sorted(out, key=lambda r: (-r["recalls"], r["theme"]))
+
+
+def themes_by_product(records: list[dict]) -> dict[str, dict[str, int]]:
+    """{product_type: {theme: recalls}} using the keyword reason themes.
+    Illustrative heuristic; records without a product_type group as 'Unknown'."""
+    out: dict[str, dict[str, int]] = {}
+    for rec in records:
+        row = out.setdefault(rec.get("product_type") or "Unknown", {})
+        t = reason_theme(rec.get("reason_for_recall", ""))
+        row[t] = row.get(t, 0) + 1
+    return out

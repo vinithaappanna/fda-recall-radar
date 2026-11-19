@@ -25,7 +25,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     statuses: list[tuple] | None = None,
                     unarchived: int = 0,
                     weekly: list[dict] | None = None,
-                    themes: list[dict] | None = None) -> str:
+                    themes: list[dict] | None = None,
+                    themes_product: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -88,6 +89,14 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Theme | Recalls | Class I |", "| --- | ---: | ---: |"]
         for t in themes:
             lines.append(f"| {t['theme']} | {t['recalls']} | {t['class_i']} |")
+    if themes_product:
+        lines += ["", "## Top reason theme by product area", "",
+                  "| Product area | Recalls | Top theme | Share of area |", "| --- | ---: | --- | ---: |"]
+        for ptype in sorted(themes_product):
+            counts = themes_product[ptype]
+            total = sum(counts.values())
+            top, n = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[0]
+            lines.append(f"| {ptype} | {total} | {top} | {n / total:.0%} |")
     if statuses:
         lines += ["", "## Recall status", "", "| Status | Recalls | Share |", "| --- | ---: | ---: |"]
         for st, n, share in statuses:

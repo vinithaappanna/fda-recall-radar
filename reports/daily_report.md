@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-19 to 2026-11-18 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-18 20:05 UTC.
+Window: 2026-10-20 to 2026-11-19 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-19 12:04 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -75,6 +75,14 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 | Contamination / particulate | 28 | 12 |
 | Potency / dissolution / stability | 19 | 3 |
 | Regulatory clearance | 13 | 0 |
+
+## Top reason theme by product area
+
+| Product area | Recalls | Top theme | Share of area |
+| --- | ---: | --- | ---: |
+| Devices | 235 | Device defect / performance | 54% |
+| Drugs | 124 | Manufacturing practice (CGMP) | 68% |
+| Food | 105 | Labeling / undeclared allergen | 79% |
 
 ## Recall status
 

@@ -262,3 +262,25 @@ def test_report_renders_theme_table_labeled_heuristic():
     md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 themes=[{"theme": "Sterility", "recalls": 3, "class_i": 1}])
     assert "| Sterility | 3 | 1 |" in md and "not an FDA taxonomy" in md
+
+
+def test_themes_by_product_groups_and_unknown():
+    from recallradar.analyze import themes_by_product
+    recs = [{"product_type": "Drugs", "reason_for_recall": "CGMP Deviations"},
+            {"product_type": "Drugs", "reason_for_recall": "Lack of Assurance of Sterility"},
+            {"product_type": "Devices", "reason_for_recall": "Cybersecurity vulnerability"},
+            {"reason_for_recall": "weird"}]
+    out = themes_by_product(recs)
+    assert out["Drugs"] == {"Manufacturing practice (CGMP)": 1, "Sterility": 1}
+    assert out["Devices"] == {"Software / cybersecurity": 1}
+    assert out["Unknown"] == {"Other": 1}
+
+
+def test_theme_product_table_picks_top_with_tie_break_and_share():
+    from recallradar import report, analyze
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                themes_product={"Drugs": {"Sterility": 2, "CGMP": 2, "Other": 1}})
+    assert "| Drugs | 5 | CGMP | 40% |" in md  # tie broken alphabetically
