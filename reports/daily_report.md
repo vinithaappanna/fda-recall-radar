@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-20 to 2026-11-19 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-19 15:03 UTC.
+Window: 2026-10-20 to 2026-11-19 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-19 20:04 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -63,6 +63,8 @@ Days from recall initiation to the enforcement report, over the 464 recalls in t
 ## Recall reason themes
 
 Keyword grouping of the free-text reason (illustrative heuristic, not an FDA taxonomy).
+
+![Recalls by reason theme](recall_themes.png)
 
 | Theme | Recalls | Class I |
 | --- | ---: | ---: |

@@ -86,6 +86,7 @@ def render_markdown(summary: dict, spotlight: list[dict],
     if themes:
         lines += ["", "## Recall reason themes", "",
                   "Keyword grouping of the free-text reason (illustrative heuristic, not an FDA taxonomy).", "",
+                  "![Recalls by reason theme](recall_themes.png)", "",
                   "| Theme | Recalls | Class I |", "| --- | ---: | ---: |"]
         for t in themes:
             lines.append(f"| {t['theme']} | {t['recalls']} | {t['class_i']} |")
@@ -176,6 +177,30 @@ def plot_classification_share(records: list[dict], out_path) -> bool:
     ax.set_xlabel("recalls")
     ax.margins(x=0.18)
     ax.invert_yaxis()  # Class I (most severe) on top
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return True
+
+
+def plot_theme_counts(themes: list[dict], out_path) -> bool:
+    """Stacked horizontal bars per reason theme: Class I vs other classes.
+    Themes come from a keyword heuristic (illustrative, not an FDA taxonomy)."""
+    if not themes:
+        return False
+    ordered = sorted(themes, key=lambda t: (t["recalls"], t["theme"]))  # largest at top
+    names = [t["theme"] for t in ordered]
+    class_i = [t["class_i"] for t in ordered]
+    other = [t["recalls"] - t["class_i"] for t in ordered]
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.barh(names, class_i, color="#c92a2a", label="Class I")
+    ax.barh(names, other, left=class_i, color="#adb5bd", label="Class II/III")
+    for i, t in enumerate(ordered):
+        ax.annotate(str(t["recalls"]), xy=(t["recalls"], i), xytext=(4, 0),
+                    textcoords="offset points", va="center", fontsize=8)
+    ax.set_title("Recalls by reason theme (keyword heuristic, illustrative)", fontsize=11)
+    ax.set_xlabel("recalls in window")
+    ax.legend(fontsize=8, loc="lower right")
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

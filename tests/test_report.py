@@ -82,3 +82,13 @@ def test_classification_share_chart(tmp_path):
 
 def test_classification_share_empty_returns_false(tmp_path):
     assert report.plot_classification_share([], tmp_path / "x.png") is False
+
+
+def test_theme_chart_renders_and_empty_is_false(tmp_path):
+    from recallradar import report
+    themes = [{"theme": "Sterility", "recalls": 5, "class_i": 1},
+              {"theme": "Other", "recalls": 9, "class_i": 0}]
+    assert report.plot_theme_counts(themes, tmp_path / "t.png") is True
+    assert (tmp_path / "t.png").stat().st_size > 1000
+    assert report.plot_theme_counts([], tmp_path / "x.png") is False
+    assert not (tmp_path / "x.png").exists()
