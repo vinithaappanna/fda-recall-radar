@@ -99,7 +99,8 @@ def main() -> None:
                                weekly=analyze.weekly_counts(records),
                                themes=analyze.reason_theme_counts(records),
                                themes_product=analyze.themes_by_product(records),
-                               firms_by_product=analyze.top_firms_by_product(records)),
+                               firms_by_product=analyze.top_firms_by_product(records),
+                               open_ages=analyze.open_recall_age(records, dt.date.today())),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

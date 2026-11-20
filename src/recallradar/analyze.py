@@ -261,3 +261,28 @@ def top_firms_by_product(records: list[dict], n: int = 3) -> dict[str, list[tupl
     return {area: [(f, c[0], c[1]) for f, c in sorted(firms.items(),
                                                        key=lambda kv: (-kv[1][0], -kv[1][1], kv[0]))[:max(n, 0)]]
             for area, firms in areas.items()}
+
+
+def open_recall_age(records: list[dict], today: dt.date) -> list[dict]:
+    """Age in days since initiation of still-open recalls (status Ongoing),
+    per classification: count, median and oldest. Records missing an
+    initiation date, with an unparseable one, or dated after `today` are
+    skipped. Classes in Class I, II, III order, then others by name."""
+    ages: dict[str, list[int]] = {}
+    for rec in records:
+        if (rec.get("status") or "").lower() != "ongoing":
+            continue
+        try:
+            age = (today - parse_report_date(rec.get("recall_initiation_date") or "")).days
+        except ValueError:
+            continue
+        if age >= 0:
+            ages.setdefault(rec.get("classification") or "Unknown", []).append(age)
+    order = {"Class I": 0, "Class II": 1, "Class III": 2}
+    out = []
+    for cls in sorted(ages, key=lambda c: (order.get(c, 3), c)):
+        a = sorted(ages[cls])
+        mid = len(a) // 2
+        median = a[mid] if len(a) % 2 else (a[mid - 1] + a[mid]) / 2
+        out.append({"classification": cls, "open": len(a), "median_age_days": median, "oldest_days": a[-1]})
+    return out

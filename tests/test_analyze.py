@@ -308,3 +308,32 @@ def test_firms_by_product_section_renders():
     md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 firms_by_product={"Devices": [("Acme", 3, 1)]})
     assert "| Devices | Acme | 3 | 1 |" in md
+
+
+def test_open_recall_age_filters_and_orders():
+    import datetime as dt
+    from recallradar.analyze import open_recall_age
+    today = dt.date(2026, 11, 20)
+    def r(cls, init, status="Ongoing"):
+        return {"classification": cls, "recall_initiation_date": init, "status": status}
+    recs = [r("Class II", "20261110"), r("Class II", "20261030"), r("Class I", "20261119"),
+            r("Class II", "20261101", "Completed"),      # closed: ignored
+            r("Class III", ""), r("Class III", "garbage"), r("Class III", "20261201"),   # missing/bad/future
+            r("Weird", "20261120")]
+    out = open_recall_age(recs, today)
+    assert [o["classification"] for o in out] == ["Class I", "Class II", "Weird"]
+    assert out[0] == {"classification": "Class I", "open": 1, "median_age_days": 1, "oldest_days": 1}
+    assert out[1] == {"classification": "Class II", "open": 2, "median_age_days": 15.5, "oldest_days": 21}
+    assert out[2]["median_age_days"] == 0           # initiated today: age 0 is valid
+    assert open_recall_age([], today) == []
+
+
+def test_open_ages_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                open_ages=[{"classification": "Class II", "open": 2,
+                                            "median_age_days": 15.0, "oldest_days": 21}])
+    assert "| Class II | 2 | 15 | 21 |" in md

@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-21 to 2026-11-20 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-20 15:04 UTC.
+Window: 2026-10-21 to 2026-11-20 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-20 20:04 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -108,6 +108,17 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 | --- | ---: | ---: |
 | Ongoing | 463 | 100% |
 | Completed | 1 | 0% |
+
+## Age of open recalls
+
+Days since initiation for recalls still marked Ongoing.
+
+| Class | Open | Median age (days) | Oldest (days) |
+| --- | ---: | ---: | ---: |
+| Class I | 61 | 58 | 268 |
+| Class II | 363 | 65 | 926 |
+| Class III | 37 | 88 | 88 |
+| Not Yet Classified | 2 | 112 | 196 |
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 
