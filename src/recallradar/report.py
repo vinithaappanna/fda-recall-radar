@@ -40,7 +40,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     unarchived: int = 0,
                     weekly: list[dict] | None = None,
                     themes: list[dict] | None = None,
-                    themes_product: dict | None = None) -> str:
+                    themes_product: dict | None = None,
+                    firms_by_product: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -117,6 +118,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
             total = sum(counts.values())
             top, n = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[0]
             lines.append(f"| {ptype} | {total} | {top} | {n / total:.0%} |")
+    if firms_by_product:
+        lines += ["", "## Top recalling firms by product area", "",
+                  "| Product area | Firm | Recalls | Class I |", "| --- | --- | ---: | ---: |"]
+        for area in sorted(firms_by_product):
+            for firm, n, c1 in firms_by_product[area]:
+                lines.append(f"| {area} | {firm} | {n} | {c1} |")
     if statuses:
         lines += ["", "## Recall status", "", "| Status | Recalls | Share |", "| --- | ---: | ---: |"]
         for st, n, share in statuses:

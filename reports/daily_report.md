@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-21 to 2026-11-20 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-20 12:04 UTC.
+Window: 2026-10-21 to 2026-11-20 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-20 15:04 UTC.
 
 **464 recalls** across 4 active days.
 
@@ -87,6 +87,20 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 | Devices | 235 | Device defect / performance | 54% |
 | Drugs | 124 | Manufacturing practice (CGMP) | 68% |
 | Food | 105 | Labeling / undeclared allergen | 79% |
+
+## Top recalling firms by product area
+
+| Product area | Firm | Recalls | Class I |
+| --- | --- | ---: | ---: |
+| Devices | Boston Scientific Cork, Ltd. | 41 | 0 |
+| Devices | Medline Industries, LP | 32 | 0 |
+| Devices | Henry Schein Inc. | 13 | 0 |
+| Drugs | Victory Medical Center Pharmacy | 42 | 0 |
+| Drugs | ABC Compounding Co., Inc. | 19 | 0 |
+| Drugs | PRITAM INTERNATIONAL PRIVATE LIMITED | 17 | 0 |
+| Food | El Ruisenor De Mexico, Inc. | 61 | 5 |
+| Food | GF Blends Inc | 3 | 3 |
+| Food | Oliva on Main | 3 | 3 |
 
 ## Recall status
 

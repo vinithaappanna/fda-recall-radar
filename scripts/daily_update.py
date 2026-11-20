@@ -98,7 +98,8 @@ def main() -> None:
                                unarchived=unkeyed,
                                weekly=analyze.weekly_counts(records),
                                themes=analyze.reason_theme_counts(records),
-                               themes_product=analyze.themes_by_product(records)),
+                               themes_product=analyze.themes_by_product(records),
+                               firms_by_product=analyze.top_firms_by_product(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

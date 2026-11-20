@@ -246,3 +246,18 @@ def themes_by_product(records: list[dict]) -> dict[str, dict[str, int]]:
         t = reason_theme(rec.get("reason_for_recall", ""))
         row[t] = row.get(t, 0) + 1
     return out
+
+
+def top_firms_by_product(records: list[dict], n: int = 3) -> dict[str, list[tuple[str, int, int]]]:
+    """{product_type: [(firm, recalls, class_i)]}, top `n` firms per product
+    area. Ties break on Class I count, then firm name. Useful for supplier-risk
+    review of one area (for example device makers) rather than all recalls."""
+    areas: dict[str, dict[str, list[int]]] = {}
+    for rec in records:
+        firm = rec.get("recalling_firm") or "Unknown"
+        c = areas.setdefault(rec.get("product_type") or "Unknown", {}).setdefault(firm, [0, 0])
+        c[0] += 1
+        c[1] += rec.get("classification") == "Class I"
+    return {area: [(f, c[0], c[1]) for f, c in sorted(firms.items(),
+                                                       key=lambda kv: (-kv[1][0], -kv[1][1], kv[0]))[:max(n, 0)]]
+            for area, firms in areas.items()}

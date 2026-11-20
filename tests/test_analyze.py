@@ -284,3 +284,27 @@ def test_theme_product_table_picks_top_with_tie_break_and_share():
     md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 themes_product={"Drugs": {"Sterility": 2, "CGMP": 2, "Other": 1}})
     assert "| Drugs | 5 | CGMP | 40% |" in md  # tie broken alphabetically
+
+
+def test_top_firms_by_product_ranking_ties_and_limit():
+    from recallradar.analyze import top_firms_by_product
+    def r(area, firm, cls="Class II"):
+        return {"product_type": area, "recalling_firm": firm, "classification": cls}
+    recs = ([r("Devices", "Acme")] * 3 + [r("Devices", "Beta", "Class I")] * 2 + [r("Devices", "Aaa")] * 2
+            + [r("Devices", "Zed")] + [r("Drugs", "Pharma Co")] + [{"recalling_firm": "", "classification": "Class I"}])
+    out = top_firms_by_product(recs, n=3)
+    # Beta beats Aaa on Class I at equal recall count; Zed is cut by the limit
+    assert out["Devices"] == [("Acme", 3, 0), ("Beta", 2, 2), ("Aaa", 2, 0)]
+    assert out["Drugs"] == [("Pharma Co", 1, 0)]
+    assert out["Unknown"] == [("Unknown", 1, 1)]
+    assert top_firms_by_product(recs, n=0)["Devices"] == [] and top_firms_by_product([]) == {}
+
+
+def test_firms_by_product_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                firms_by_product={"Devices": [("Acme", 3, 1)]})
+    assert "| Devices | Acme | 3 | 1 |" in md
