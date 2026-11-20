@@ -13,6 +13,20 @@ from .analyze import classification_counts, daily_series
 CLASS_ORDER = ["Class I", "Class II", "Class III"]
 
 
+def stale_banner(endpoint_updated: dict | None, today: dt.date, max_days: int = 7) -> str | None:
+    """Warning line when any openFDA endpoint has not published for more than
+    `max_days` days, so a quiet report is not mistaken for a quiet month.
+    Returns None when every endpoint is fresh or nothing is known."""
+    if not endpoint_updated:
+        return None
+    late = {ep: (today - d).days for ep, d in endpoint_updated.items() if (today - d).days > max_days}
+    if not late:
+        return None
+    parts = ", ".join(f"{ep} {n} days" for ep, n in sorted(late.items()))
+    return (f"> **Stale upstream data:** openFDA has not published for over {max_days} days "
+            f"({parts}). Recent days may be missing here until it does.")
+
+
 def render_markdown(summary: dict, spotlight: list[dict],
                     window_start: dt.date, window_end: dt.date,
                     data_through: dt.date | None = None,
@@ -43,6 +57,11 @@ def render_markdown(summary: dict, spotlight: list[dict],
         "",
         f"**{summary['total']} recalls** across {summary['days_with_recalls']} active days.",
         "",
+    ]
+    banner = stale_banner(endpoint_updated, generated_at.date())
+    if banner:
+        lines += [banner, ""]
+    lines += [
         "## By severity",
         "",
         "| Classification | Recalls |",

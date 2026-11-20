@@ -92,3 +92,29 @@ def test_theme_chart_renders_and_empty_is_false(tmp_path):
     assert (tmp_path / "t.png").stat().st_size > 1000
     assert report.plot_theme_counts([], tmp_path / "x.png") is False
     assert not (tmp_path / "x.png").exists()
+
+
+def test_stale_banner_threshold_and_content():
+    import datetime as dt
+    from recallradar import report
+    today = dt.date(2026, 11, 20)
+    fresh = {"drug": dt.date(2026, 11, 14), "food": dt.date(2026, 11, 20)}   # 6 and 0 days
+    assert report.stale_banner(fresh, today) is None
+    assert report.stale_banner(None, today) is None and report.stale_banner({}, today) is None
+    edge = {"drug": dt.date(2026, 11, 13)}                                    # exactly 7: not stale
+    assert report.stale_banner(edge, today) is None
+    stale = {"drug": dt.date(2026, 11, 11), "device": dt.date(2026, 11, 12), "food": dt.date(2026, 11, 19)}
+    msg = report.stale_banner(stale, today)
+    assert "device 8 days" in msg and "drug 9 days" in msg and "food" not in msg
+
+
+def test_report_shows_banner_only_when_stale():
+    import datetime as dt
+    from recallradar import analyze, report
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    now = dt.datetime(2026, 11, 20, 12, tzinfo=dt.timezone.utc)
+    args = (summary, [], dt.date(2026, 10, 21), dt.date(2026, 11, 20))
+    stale = report.render_markdown(*args, endpoint_updated={"drug": dt.date(2026, 11, 11)}, generated_at=now)
+    fresh = report.render_markdown(*args, endpoint_updated={"drug": dt.date(2026, 11, 19)}, generated_at=now)
+    assert "Stale upstream data" in stale and "Stale upstream data" not in fresh
