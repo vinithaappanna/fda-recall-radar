@@ -329,3 +329,26 @@ def themes_by_month(records: list[dict], top: int = 4) -> dict:
         counts["Other themes"] = sum(n for t, n in per[month].items() if t not in keep)
         months.append({"month": month, "counts": counts})
     return {"themes": keep + (["Other themes"] if keep else []), "months": months}
+
+
+def data_quality_notes(records: list[dict]) -> dict:
+    """Counts of source-data oddities so readers know how much to trust the
+    date-based sections: missing or unparseable initiation/report dates,
+    reports dated before initiation, and missing classification."""
+    out = {"records": len(records), "missing_initiation": 0, "bad_dates": 0,
+           "report_before_initiation": 0, "missing_classification": 0}
+    for rec in records:
+        if not rec.get("classification"):
+            out["missing_classification"] += 1
+        init, rep = rec.get("recall_initiation_date"), rec.get("report_date")
+        if not init:
+            out["missing_initiation"] += 1
+        try:
+            d_init = parse_report_date(init) if init else None
+            d_rep = parse_report_date(rep or "")
+        except ValueError:
+            out["bad_dates"] += 1
+            continue
+        if d_init and d_rep < d_init:
+            out["report_before_initiation"] += 1
+    return out

@@ -389,3 +389,29 @@ def test_month_themes_section_renders():
                                 month_themes={"themes": ["A", "Other themes"],
                                               "months": [{"month": "2026-10", "counts": {"A": 3, "Other themes": 1}}]})
     assert "| 2026-10 | 3 | 1 |" in md
+
+
+def test_data_quality_notes_counts_each_oddity():
+    from recallradar.analyze import data_quality_notes
+    recs = [
+        {"classification": "Class I", "recall_initiation_date": "20261001", "report_date": "20261010"},   # clean
+        {"classification": "", "recall_initiation_date": "20261001", "report_date": "20261010"},          # no class
+        {"classification": "Class II", "recall_initiation_date": "", "report_date": "20261010"},          # no init
+        {"classification": "Class II", "recall_initiation_date": "20261020", "report_date": "20261010"},  # before
+        {"classification": "Class II", "recall_initiation_date": "garbage", "report_date": "20261010"},   # bad
+    ]
+    assert data_quality_notes(recs) == {"records": 5, "missing_initiation": 1, "bad_dates": 1,
+                                        "report_before_initiation": 1, "missing_classification": 1}
+    assert data_quality_notes([])["records"] == 0
+
+
+def test_source_notes_section_renders_only_with_records():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    args = (summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18))
+    md = report.render_markdown(*args, quality_notes={"records": 9, "missing_initiation": 1, "bad_dates": 0,
+                                                       "report_before_initiation": 2, "missing_classification": 0})
+    assert "Source data notes" in md and "2 are reported before their initiation date" in md
+    assert "Source data notes" not in report.render_markdown(*args, quality_notes={"records": 0})

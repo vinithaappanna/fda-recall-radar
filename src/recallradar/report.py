@@ -44,7 +44,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     firms_by_product: dict | None = None,
                     open_ages: list[dict] | None = None,
                     class_one_months: list[dict] | None = None,
-                    month_themes: dict | None = None) -> str:
+                    month_themes: dict | None = None,
+                    quality_notes: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -151,6 +152,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Month | Recalls | Class I | Share |", "| --- | ---: | ---: | ---: |"]
         for m in class_one_months:
             lines.append(f"| {m['month']} | {m['recalls']} | {m['class_i']} | {m['share']:.0%} |")
+    if quality_notes and quality_notes.get("records"):
+        q = quality_notes
+        lines += ["", "## Source data notes", "",
+                  f"Of {q['records']} recalls in the window: {q['missing_initiation']} lack an initiation date, "
+                  f"{q['bad_dates']} have an unparseable date, {q['report_before_initiation']} are reported "
+                  f"before their initiation date, {q['missing_classification']} lack a classification. "
+                  "Lag and age sections skip those records."]
     if unarchived:
         lines += ["", f"_Window total includes {unarchived} recalls with no recall_number; "
                       "they are reported here but cannot be keyed into the archive._"]
