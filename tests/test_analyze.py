@@ -415,3 +415,8 @@ def test_source_notes_section_renders_only_with_records():
                                                        "report_before_initiation": 2, "missing_classification": 0})
     assert "Source data notes" in md and "2 are reported before their initiation date" in md
     assert "Source data notes" not in report.render_markdown(*args, quality_notes={"records": 0})
+    scoped = report.render_markdown(*args, unarchived=2, archive_size=462, quality_notes={
+        "records": 394, "missing_initiation": 0, "bad_dates": 0,
+        "report_before_initiation": 0, "missing_classification": 0})
+    assert "the 394 recalls with a report date in the rolling window 2026-11-01 to 2026-11-18" in scoped
+    assert "462 recalls keyed by recall_number" in scoped and "2 of the window recalls have no recall_number" in scoped

@@ -45,7 +45,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     open_ages: list[dict] | None = None,
                     class_one_months: list[dict] | None = None,
                     month_themes: dict | None = None,
-                    quality_notes: dict | None = None) -> str:
+                    quality_notes: dict | None = None,
+                    archive_size: int | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -155,7 +156,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
     if quality_notes and quality_notes.get("records"):
         q = quality_notes
         lines += ["", "## Source data notes", "",
-                  f"Of {q['records']} recalls in the window: {q['missing_initiation']} lack an initiation date, "
+                  f"Scope: the {q['records']} recalls with a report date in the rolling window "
+                  f"{window_start} to {window_end}, not the whole archive"
+                  + (f" ({archive_size} recalls keyed by recall_number, which keeps recalls after they leave the window)"
+                     if archive_size is not None else "")
+                  + (f"; {unarchived} of the window recalls have no recall_number and are not in the archive"
+                     if unarchived else "")
+                  + f". Of the {q['records']}: {q['missing_initiation']} lack an initiation date, "
                   f"{q['bad_dates']} have an unparseable date, {q['report_before_initiation']} are reported "
                   f"before their initiation date, {q['missing_classification']} lack a classification. "
                   "Lag and age sections skip those records."]

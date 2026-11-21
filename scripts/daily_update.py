@@ -103,7 +103,8 @@ def main() -> None:
                                open_ages=analyze.open_recall_age(records, dt.date.today()),
                                class_one_months=analyze.class_one_share_by_month(records),
                                month_themes=analyze.themes_by_month(records),
-                               quality_notes=analyze.data_quality_notes(records)),
+                               quality_notes=analyze.data_quality_notes(records),
+                               archive_size=len(history)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
