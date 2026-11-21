@@ -286,3 +286,21 @@ def open_recall_age(records: list[dict], today: dt.date) -> list[dict]:
         median = a[mid] if len(a) % 2 else (a[mid - 1] + a[mid]) / 2
         out.append({"classification": cls, "open": len(a), "median_age_days": median, "oldest_days": a[-1]})
     return out
+
+
+def class_one_share_by_month(records: list[dict], min_recalls: int = 10) -> list[dict]:
+    """Share of recalls that are Class I (the most serious classification) per
+    report month, oldest first. Months with fewer than min_recalls records are
+    skipped as too small to read a share from. Records with a missing or bad
+    report date are skipped."""
+    months: dict[str, list[int]] = {}
+    for rec in records:
+        try:
+            d = parse_report_date(rec.get("report_date") or "")
+        except ValueError:
+            continue
+        m = months.setdefault(f"{d:%Y-%m}", [0, 0])
+        m[0] += 1
+        m[1] += rec.get("classification") == "Class I"
+    return [{"month": k, "recalls": n, "class_i": c, "share": c / n}
+            for k, (n, c) in sorted(months.items()) if n >= min_recalls]

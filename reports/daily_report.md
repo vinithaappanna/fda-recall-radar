@@ -1,46 +1,46 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-21 to 2026-11-20 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-20 20:04 UTC.
+Window: 2026-10-22 to 2026-11-21 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-21 12:04 UTC.
 
-**464 recalls** across 4 active days.
+**394 recalls** across 3 active days.
 
-> **Stale upstream data:** openFDA has not published for over 7 days (device 9 days, drug 9 days, food 9 days). Recent days may be missing here until it does.
+> **Stale upstream data:** openFDA has not published for over 7 days (device 10 days, drug 10 days, food 10 days). Recent days may be missing here until it does.
 
 ## By severity
 
 | Classification | Recalls |
 | --- | ---: |
-| Class I | 62 |
-| Class II | 363 |
-| Class III | 37 |
+| Class I | 59 |
+| Class II | 298 |
+| Class III | 35 |
 
 ## By product area
 
 | Product type | Recalls |
 | --- | ---: |
-| Devices | 235 |
-| Drugs | 124 |
-| Food | 105 |
+| Devices | 177 |
+| Drugs | 119 |
+| Food | 98 |
 
 ## Reporting lag
 
-Days from recall initiation to the enforcement report, over the 464 recalls in the window with both dates: median **43.0**, p90 65, longest 917.
+Days from recall initiation to the enforcement report, over the 394 recalls in the window with both dates: median **43.0**, p90 65, longest 917.
 
 | Classification | Recalls | Median lag | p90 |
 | --- | ---: | ---: | ---: |
-| Class I | 62 | 41.0 | 65 |
-| Class II | 363 | 43 | 65 |
-| Class III | 37 | 65 | 65 |
+| Class I | 59 | 41 | 65 |
+| Class II | 298 | 42.0 | 65 |
+| Class III | 35 | 65 | 65 |
 
 ## Top recalling firms
 
 - El Ruisenor De Mexico, Inc. (61)
 - Victory Medical Center Pharmacy (42)
 - Boston Scientific Cork, Ltd. (41)
-- Medline Industries, LP (32)
 - ABC Compounding Co., Inc. (19)
 - PRITAM INTERNATIONAL PRIVATE LIMITED (17)
 - Henry Schein Inc. (13)
+- Medline Industries, LP (13)
 - Ventec Life Systems, Inc. (12)
 - Cardinal Health 200, LLC (11)
 - PHILIPS MEDICAL SYSTEMS NEDERLAND B.V. (9)
@@ -49,15 +49,14 @@ Days from recall initiation to the enforcement report, over the 464 recalls in t
 
 | Product type | Class I | Class II | Class III | Class I share |
 | --- | ---: | ---: | ---: | ---: |
-| Devices | 31 | 203 | 1 | 13% |
-| Drugs | 3 | 116 | 4 | 2% |
-| Food | 28 | 44 | 32 | 27% |
+| Devices | 29 | 148 | 0 | 16% |
+| Drugs | 3 | 111 | 4 | 3% |
+| Food | 27 | 39 | 31 | 28% |
 
 ## Recalls by week
 
 | Week of | Recalls | Class I |
 | --- | ---: | ---: |
-| 2026-10-19 | 70 | 3 |
 | 2026-10-26 | 194 | 25 |
 | 2026-11-02 | 77 | 12 |
 | 2026-11-09 | 123 | 22 |
@@ -70,31 +69,31 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 
 | Theme | Recalls | Class I |
 | --- | ---: | ---: |
-| Device defect / performance | 129 | 24 |
-| Labeling / undeclared allergen | 97 | 19 |
-| Manufacturing practice (CGMP) | 86 | 0 |
-| Sterility | 32 | 0 |
-| Other | 31 | 2 |
-| Software / cybersecurity | 29 | 2 |
-| Contamination / particulate | 28 | 12 |
-| Potency / dissolution / stability | 19 | 3 |
+| Device defect / performance | 98 | 24 |
+| Labeling / undeclared allergen | 88 | 18 |
+| Manufacturing practice (CGMP) | 85 | 0 |
+| Software / cybersecurity | 26 | 0 |
+| Sterility | 24 | 0 |
+| Contamination / particulate | 22 | 12 |
+| Other | 20 | 2 |
+| Potency / dissolution / stability | 18 | 3 |
 | Regulatory clearance | 13 | 0 |
 
 ## Top reason theme by product area
 
 | Product area | Recalls | Top theme | Share of area |
 | --- | ---: | --- | ---: |
-| Devices | 235 | Device defect / performance | 54% |
-| Drugs | 124 | Manufacturing practice (CGMP) | 68% |
-| Food | 105 | Labeling / undeclared allergen | 79% |
+| Devices | 177 | Device defect / performance | 55% |
+| Drugs | 119 | Manufacturing practice (CGMP) | 70% |
+| Food | 98 | Labeling / undeclared allergen | 80% |
 
 ## Top recalling firms by product area
 
 | Product area | Firm | Recalls | Class I |
 | --- | --- | ---: | ---: |
 | Devices | Boston Scientific Cork, Ltd. | 41 | 0 |
-| Devices | Medline Industries, LP | 32 | 0 |
 | Devices | Henry Schein Inc. | 13 | 0 |
+| Devices | Medline Industries, LP | 13 | 0 |
 | Drugs | Victory Medical Center Pharmacy | 42 | 0 |
 | Drugs | ABC Compounding Co., Inc. | 19 | 0 |
 | Drugs | PRITAM INTERNATIONAL PRIVATE LIMITED | 17 | 0 |
@@ -106,7 +105,7 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 
 | Status | Recalls | Share |
 | --- | ---: | ---: |
-| Ongoing | 463 | 100% |
+| Ongoing | 393 | 100% |
 | Completed | 1 | 0% |
 
 ## Age of open recalls
@@ -115,10 +114,19 @@ Days since initiation for recalls still marked Ongoing.
 
 | Class | Open | Median age (days) | Oldest (days) |
 | --- | ---: | ---: | ---: |
-| Class I | 61 | 58 | 268 |
-| Class II | 363 | 65 | 926 |
-| Class III | 37 | 88 | 88 |
-| Not Yet Classified | 2 | 112 | 196 |
+| Class I | 58 | 58 | 269 |
+| Class II | 298 | 65 | 927 |
+| Class III | 35 | 89 | 89 |
+| Not Yet Classified | 2 | 113 | 197 |
+
+## Class I share by month
+
+Share of recalls classed as Class I (most serious) by report month. Recent months can be partial because openFDA publishes in batches.
+
+| Month | Recalls | Class I | Share |
+| --- | ---: | ---: | ---: |
+| 2026-10 | 194 | 25 | 13% |
+| 2026-11 | 200 | 34 | 17% |
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 
@@ -131,8 +139,8 @@ Firms with 3+ recalls in the window (a supplier-risk signal).
 | El Ruisenor De Mexico, Inc. | 61 | 5 |
 | Victory Medical Center Pharmacy | 42 | 0 |
 | Boston Scientific Cork, Ltd. | 41 | 0 |
-| Medline Industries, LP | 32 | 0 |
 | ABC Compounding Co., Inc. | 19 | 0 |
+| PRITAM INTERNATIONAL PRIVATE LIMITED | 17 | 0 |
 
 ## Highest-severity recalls in the window
 

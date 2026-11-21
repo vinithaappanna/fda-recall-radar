@@ -337,3 +337,26 @@ def test_open_ages_section_renders():
                                 open_ages=[{"classification": "Class II", "open": 2,
                                             "median_age_days": 15.0, "oldest_days": 21}])
     assert "| Class II | 2 | 15 | 21 |" in md
+
+
+def test_class_one_share_by_month():
+    from recallradar.analyze import class_one_share_by_month
+    def r(d, cls):
+        return {"report_date": d, "classification": cls}
+    recs = ([r("20261005", "Class I")] * 3 + [r("20261006", "Class II")] * 7
+            + [r("20261101", "Class I")] * 2          # Nov too small
+            + [r("", "Class I"), r("bad", "Class I")])
+    out = class_one_share_by_month(recs, min_recalls=10)
+    assert out == [{"month": "2026-10", "recalls": 10, "class_i": 3, "share": 0.3}]
+    assert class_one_share_by_month(recs, min_recalls=2)[1]["month"] == "2026-11"
+    assert class_one_share_by_month([]) == []
+
+
+def test_class_one_months_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                class_one_months=[{"month": "2026-10", "recalls": 10, "class_i": 3, "share": 0.3}])
+    assert "| 2026-10 | 10 | 3 | 30% |" in md

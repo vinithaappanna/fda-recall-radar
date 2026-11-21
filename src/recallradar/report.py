@@ -42,7 +42,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     themes: list[dict] | None = None,
                     themes_product: dict | None = None,
                     firms_by_product: dict | None = None,
-                    open_ages: list[dict] | None = None) -> str:
+                    open_ages: list[dict] | None = None,
+                    class_one_months: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -135,6 +136,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Class | Open | Median age (days) | Oldest (days) |", "| --- | ---: | ---: | ---: |"]
         for o in open_ages:
             lines.append(f"| {o['classification']} | {o['open']} | {o['median_age_days']:g} | {o['oldest_days']} |")
+    if class_one_months:
+        lines += ["", "## Class I share by month", "",
+                  "Share of recalls classed as Class I (most serious) by report month. "
+                  "Recent months can be partial because openFDA publishes in batches.", "",
+                  "| Month | Recalls | Class I | Share |", "| --- | ---: | ---: | ---: |"]
+        for m in class_one_months:
+            lines.append(f"| {m['month']} | {m['recalls']} | {m['class_i']} | {m['share']:.0%} |")
     if unarchived:
         lines += ["", f"_Window total includes {unarchived} recalls with no recall_number; "
                       "they are reported here but cannot be keyed into the archive._"]
