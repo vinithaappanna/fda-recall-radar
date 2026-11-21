@@ -360,3 +360,32 @@ def test_class_one_months_section_renders():
     md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 class_one_months=[{"month": "2026-10", "recalls": 10, "class_i": 3, "share": 0.3}])
     assert "| 2026-10 | 10 | 3 | 30% |" in md
+
+
+def test_themes_by_month_top_and_fold():
+    from recallradar.analyze import themes_by_month, reason_theme
+    contam = "Listeria monocytogenes contamination"
+    cgmp = "CGMP Deviations."
+    odd = "zzz unusual"
+    assert len({reason_theme(contam), reason_theme(cgmp), reason_theme(odd)}) == 3
+    def r(d, reason):
+        return {"report_date": d, "reason_for_recall": reason}
+    recs = [r("20261001", contam)] * 3 + [r("20261101", contam), r("20261102", cgmp),
+            r("20261103", odd), r("", cgmp), r("bad", cgmp)]
+    out = themes_by_month(recs, top=1)
+    assert out["themes"] == [reason_theme(contam), "Other themes"]
+    assert [m["month"] for m in out["months"]] == ["2026-10", "2026-11"]
+    nov = out["months"][1]["counts"]
+    assert nov[reason_theme(contam)] == 1 and nov["Other themes"] == 2
+    assert themes_by_month([]) == {"themes": [], "months": []}
+
+
+def test_month_themes_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                month_themes={"themes": ["A", "Other themes"],
+                                              "months": [{"month": "2026-10", "counts": {"A": 3, "Other themes": 1}}]})
+    assert "| 2026-10 | 3 | 1 |" in md

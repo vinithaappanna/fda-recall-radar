@@ -43,7 +43,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     themes_product: dict | None = None,
                     firms_by_product: dict | None = None,
                     open_ages: list[dict] | None = None,
-                    class_one_months: list[dict] | None = None) -> str:
+                    class_one_months: list[dict] | None = None,
+                    month_themes: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -136,6 +137,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Class | Open | Median age (days) | Oldest (days) |", "| --- | ---: | ---: | ---: |"]
         for o in open_ages:
             lines.append(f"| {o['classification']} | {o['open']} | {o['median_age_days']:g} | {o['oldest_days']} |")
+    if month_themes and month_themes.get("months"):
+        cols = month_themes["themes"]
+        lines += ["", "## Reason themes by month", "",
+                  "Top reason themes overall (keyword heuristic, not an FDA taxonomy), by report month.", "",
+                  "| Month | " + " | ".join(cols) + " |", "| --- | " + " | ".join("---:" for _ in cols) + " |"]
+        for m in month_themes["months"]:
+            lines.append(f"| {m['month']} | " + " | ".join(str(m['counts'][c]) for c in cols) + " |")
     if class_one_months:
         lines += ["", "## Class I share by month", "",
                   "Share of recalls classed as Class I (most serious) by report month. "

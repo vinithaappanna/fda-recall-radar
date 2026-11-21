@@ -304,3 +304,28 @@ def class_one_share_by_month(records: list[dict], min_recalls: int = 10) -> list
         m[1] += rec.get("classification") == "Class I"
     return [{"month": k, "recalls": n, "class_i": c, "share": c / n}
             for k, (n, c) in sorted(months.items()) if n >= min_recalls]
+
+
+def themes_by_month(records: list[dict], top: int = 4) -> dict:
+    """Recall counts per report month for the `top` most common reason themes
+    overall (everything else is folded into 'Other themes'). Returns
+    {"themes": [...], "months": [{"month", "counts": {theme: n}}]}, months
+    oldest first. Records without a parseable report date are skipped."""
+    per: dict[str, dict[str, int]] = {}
+    overall: dict[str, int] = {}
+    for rec in records:
+        try:
+            d = parse_report_date(rec.get("report_date") or "")
+        except ValueError:
+            continue
+        t = reason_theme(rec.get("reason_for_recall", ""))
+        overall[t] = overall.get(t, 0) + 1
+        m = per.setdefault(f"{d:%Y-%m}", {})
+        m[t] = m.get(t, 0) + 1
+    keep = [t for t, _ in sorted(overall.items(), key=lambda kv: (-kv[1], kv[0]))[:top]]
+    months = []
+    for month in sorted(per):
+        counts = {t: per[month].get(t, 0) for t in keep}
+        counts["Other themes"] = sum(n for t, n in per[month].items() if t not in keep)
+        months.append({"month": month, "counts": counts})
+    return {"themes": keep + (["Other themes"] if keep else []), "months": months}
