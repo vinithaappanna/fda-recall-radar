@@ -263,9 +263,10 @@ def top_firms_by_product(records: list[dict], n: int = 3) -> dict[str, list[tupl
             for area, firms in areas.items()}
 
 
-def open_recall_age(records: list[dict], today: dt.date) -> list[dict]:
+def open_recall_age(records: list[dict], today: dt.date, long_open_days: int = 90) -> list[dict]:
     """Age in days since initiation of still-open recalls (status Ongoing),
-    per classification: count, median and oldest. Records missing an
+    per classification: count, median, oldest and how many are open longer than
+    `long_open_days` (strictly greater). Records missing an
     initiation date, with an unparseable one, or dated after `today` are
     skipped. Classes in Class I, II, III order, then others by name."""
     ages: dict[str, list[int]] = {}
@@ -284,7 +285,8 @@ def open_recall_age(records: list[dict], today: dt.date) -> list[dict]:
         a = sorted(ages[cls])
         mid = len(a) // 2
         median = a[mid] if len(a) % 2 else (a[mid - 1] + a[mid]) / 2
-        out.append({"classification": cls, "open": len(a), "median_age_days": median, "oldest_days": a[-1]})
+        out.append({"classification": cls, "open": len(a), "median_age_days": median, "oldest_days": a[-1],
+                    "long_open": sum(1 for x in a if x > long_open_days)})
     return out
 
 

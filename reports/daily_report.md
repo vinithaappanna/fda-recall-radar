@@ -1,10 +1,10 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-22 to 2026-11-21 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-21 20:06 UTC.
+Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 12:08 UTC.
 
 **394 recalls** across 3 active days.
 
-> **Stale upstream data:** openFDA has not published for over 7 days (device 10 days, drug 10 days, food 10 days). Recent days may be missing here until it does.
+> **Stale upstream data:** openFDA has not published for over 7 days (device 11 days, drug 11 days, food 11 days). Recent days may be missing here until it does.
 
 ## By severity
 
@@ -112,12 +112,12 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 
 Days since initiation for recalls still marked Ongoing.
 
-| Class | Open | Median age (days) | Oldest (days) |
-| --- | ---: | ---: | ---: |
-| Class I | 58 | 58 | 269 |
-| Class II | 298 | 65 | 927 |
-| Class III | 35 | 89 | 89 |
-| Not Yet Classified | 2 | 113 | 197 |
+| Class | Open | Median age (days) | Oldest (days) | Open > 90 days |
+| --- | ---: | ---: | ---: | ---: |
+| Class I | 58 | 59 | 270 | 4 |
+| Class II | 298 | 66 | 928 | 13 |
+| Class III | 35 | 90 | 90 | 0 |
+| Not Yet Classified | 2 | 114 | 198 | 1 |
 
 ## Reason themes by month
 
@@ -139,7 +139,7 @@ Share of recalls classed as Class I (most serious) by report month. Recent month
 
 ## Source data notes
 
-Scope: the 394 recalls with a report date in the rolling window 2026-10-22 to 2026-11-21, not the whole archive (462 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 394: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
+Scope: the 394 recalls with a report date in the rolling window 2026-10-23 to 2026-11-22, not the whole archive (462 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 394: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 

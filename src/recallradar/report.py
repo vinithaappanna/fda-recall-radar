@@ -136,9 +136,10 @@ def render_markdown(summary: dict, spotlight: list[dict],
     if open_ages:
         lines += ["", "## Age of open recalls", "",
                   "Days since initiation for recalls still marked Ongoing.", "",
-                  "| Class | Open | Median age (days) | Oldest (days) |", "| --- | ---: | ---: | ---: |"]
+                  "| Class | Open | Median age (days) | Oldest (days) | Open > 90 days |",
+                  "| --- | ---: | ---: | ---: | ---: |"]
         for o in open_ages:
-            lines.append(f"| {o['classification']} | {o['open']} | {o['median_age_days']:g} | {o['oldest_days']} |")
+            lines.append(f"| {o['classification']} | {o['open']} | {o['median_age_days']:g} | {o['oldest_days']} | {o.get('long_open', 0)} |")
     if month_themes and month_themes.get("months"):
         cols = month_themes["themes"]
         lines += ["", "## Reason themes by month", "",

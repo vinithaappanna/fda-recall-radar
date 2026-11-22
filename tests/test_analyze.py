@@ -322,8 +322,8 @@ def test_open_recall_age_filters_and_orders():
             r("Weird", "20261120")]
     out = open_recall_age(recs, today)
     assert [o["classification"] for o in out] == ["Class I", "Class II", "Weird"]
-    assert out[0] == {"classification": "Class I", "open": 1, "median_age_days": 1, "oldest_days": 1}
-    assert out[1] == {"classification": "Class II", "open": 2, "median_age_days": 15.5, "oldest_days": 21}
+    assert out[0] == {"classification": "Class I", "open": 1, "median_age_days": 1, "oldest_days": 1, "long_open": 0}
+    assert out[1] == {"classification": "Class II", "open": 2, "median_age_days": 15.5, "oldest_days": 21, "long_open": 0}
     assert out[2]["median_age_days"] == 0           # initiated today: age 0 is valid
     assert open_recall_age([], today) == []
 
@@ -420,3 +420,15 @@ def test_source_notes_section_renders_only_with_records():
         "report_before_initiation": 0, "missing_classification": 0})
     assert "the 394 recalls with a report date in the rolling window 2026-11-01 to 2026-11-18" in scoped
     assert "462 recalls keyed by recall_number" in scoped and "2 of the window recalls have no recall_number" in scoped
+
+
+def test_open_recall_age_counts_long_open_strictly_over_threshold():
+    import datetime as dt
+    from recallradar.analyze import open_recall_age
+    today = dt.date(2026, 11, 20)
+    def r(days):
+        return {"classification": "Class II", "status": "Ongoing",
+                "recall_initiation_date": (today - dt.timedelta(days=days)).strftime("%Y%m%d")}
+    out = open_recall_age([r(89), r(90), r(91), r(200)], today)
+    assert out[0]["long_open"] == 2                      # 91 and 200; exactly 90 is not over
+    assert open_recall_age([r(10), r(20)], today, long_open_days=15)[0]["long_open"] == 1
