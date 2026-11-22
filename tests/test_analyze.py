@@ -457,3 +457,23 @@ def test_firm_concentration_section_renders():
             "top_firms": [("A", 3), ("B", 3)]}
     md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), concentration=conc)
     assert "top 2 firms account for 75% of recalls" in md and "- A: 3" in md
+
+
+def test_plot_top_firms_renders_and_handles_long_names_and_empty(tmp_path):
+    from recallradar import report
+    firms = [("A Very Long Recalling Firm Name Incorporated LLC", 12), ("Beta Co", 9), ("Gamma", 4)]
+    assert report.plot_top_firms(firms, tmp_path / "f.png") is True
+    assert (tmp_path / "f.png").stat().st_size > 1000
+    assert report.plot_top_firms([], tmp_path / "e.png") is False
+    md = report.render_markdown(*_summary_args(), concentration={
+        "firms": 4, "recalls": 8, "top": 2, "top_share": 0.75, "top_class_i_share": 0.75,
+        "top_firms": [("A", 3), ("B", 3)]})
+    assert "top_firms.png" in md
+
+
+def _summary_args():
+    from recallradar import analyze
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    return summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18)

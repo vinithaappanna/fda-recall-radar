@@ -156,6 +156,7 @@ def render_markdown(summary: dict, spotlight: list[dict],
         for m in class_one_months:
             lines.append(f"| {m['month']} | {m['recalls']} | {m['class_i']} | {m['share']:.0%} |")
     if concentration and concentration.get("recalls"):
+        lines += ["", "![Top recalling firms](top_firms.png)"]
         c = concentration
         lines += ["", "## Firm concentration", "",
                   f"{c['firms']} distinct firms have {c['recalls']} recall records in the window. "
@@ -274,6 +275,26 @@ def plot_theme_counts(themes: list[dict], out_path) -> bool:
     ax.set_title("Recalls by reason theme (keyword heuristic, illustrative)", fontsize=11)
     ax.set_xlabel("recalls in window")
     ax.legend(fontsize=8, loc="lower right")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return True
+
+
+def plot_top_firms(firms: list[tuple[str, int]], out_path, n: int = 10) -> bool:
+    """Horizontal bar chart of the firms with the most recall records in the
+    window. Long names are truncated so the bars stay readable."""
+    if not firms:
+        return False
+    top = firms[:n]
+    labels = [f if len(f) <= 38 else f[:35] + "..." for f, _c in top][::-1]
+    counts = [c for _f, c in top][::-1]
+    fig, ax = plt.subplots(figsize=(9, max(3.5, 0.4 * len(top) + 1.5)))
+    ax.barh(labels, counts, color="#2f9e44")
+    for i, c in enumerate(counts):
+        ax.text(c, i, f" {c}", va="center", fontsize=8)
+    ax.set_xlabel("recall records in window")
+    ax.set_title("Top recalling firms (window)")
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

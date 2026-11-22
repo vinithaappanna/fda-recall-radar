@@ -113,6 +113,8 @@ def main() -> None:
         print("wrote chart")
     if report.plot_classification_share(records, REPORTS / "recalls_by_class.png"):
         print("wrote class chart")
+    if report.plot_top_firms(analyze.top_firms(records, n=10), REPORTS / "top_firms.png"):
+        print("wrote firms chart")
     if report.plot_theme_counts(analyze.reason_theme_counts(records), REPORTS / "recall_themes.png"):
         print("wrote theme chart")
     print("wrote reports/daily_report.md")

@@ -1,10 +1,10 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 15:08 UTC.
+Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 20:05 UTC.
 
 **394 recalls** across 3 active days.
 
-> **Stale upstream data:** openFDA has not published for over 7 days (device 11 days, drug 11 days, food 11 days). Recent days may be missing here until it does.
+> **Stale upstream data:** openFDA has not published for over 7 days (drug 11 days, food 11 days). Recent days may be missing here until it does.
 
 ## By severity
 
@@ -136,6 +136,8 @@ Share of recalls classed as Class I (most serious) by report month. Recent month
 | --- | ---: | ---: | ---: |
 | 2026-10 | 194 | 25 | 13% |
 | 2026-11 | 200 | 34 | 17% |
+
+![Top recalling firms](top_firms.png)
 
 ## Firm concentration
 
