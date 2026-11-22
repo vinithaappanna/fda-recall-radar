@@ -432,3 +432,28 @@ def test_open_recall_age_counts_long_open_strictly_over_threshold():
     out = open_recall_age([r(89), r(90), r(91), r(200)], today)
     assert out[0]["long_open"] == 2                      # 91 and 200; exactly 90 is not over
     assert open_recall_age([r(10), r(20)], today, long_open_days=15)[0]["long_open"] == 1
+
+
+def test_firm_concentration_shares_and_ties():
+    from recallradar.analyze import firm_concentration
+    recs = ([{"recalling_firm": "A", "classification": "Class I"}] * 3
+            + [{"recalling_firm": "B", "classification": "Class II"}] * 3
+            + [{"recalling_firm": "C", "classification": "Class I"}]
+            + [{"classification": "Class II"}])                       # no firm name
+    out = firm_concentration(recs, top=2)
+    assert out["firms"] == 4 and out["recalls"] == 8
+    assert out["top_firms"] == [("A", 3), ("B", 3)]                    # tie broken by name
+    assert out["top_share"] == 6 / 8 and out["top_class_i_share"] == 3 / 4
+    empty = firm_concentration([])
+    assert empty["recalls"] == 0 and empty["top_share"] == 0.0 and empty["top_firms"] == []
+
+
+def test_firm_concentration_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    conc = {"firms": 4, "recalls": 8, "top": 2, "top_share": 0.75, "top_class_i_share": 0.75,
+            "top_firms": [("A", 3), ("B", 3)]}
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), concentration=conc)
+    assert "top 2 firms account for 75% of recalls" in md and "- A: 3" in md

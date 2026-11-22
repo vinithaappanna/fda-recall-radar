@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 12:08 UTC.
+Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 15:08 UTC.
 
 **394 recalls** across 3 active days.
 
@@ -136,6 +136,16 @@ Share of recalls classed as Class I (most serious) by report month. Recent month
 | --- | ---: | ---: | ---: |
 | 2026-10 | 194 | 25 | 13% |
 | 2026-11 | 200 | 34 | 17% |
+
+## Firm concentration
+
+111 distinct firms have 394 recall records in the window. The top 5 firms account for 46% of recalls and 8% of Class I recalls.
+
+- El Ruisenor De Mexico, Inc.: 61
+- Victory Medical Center Pharmacy: 42
+- Boston Scientific Cork, Ltd.: 41
+- ABC Compounding Co., Inc.: 19
+- PRITAM INTERNATIONAL PRIVATE LIMITED: 17
 
 ## Source data notes
 

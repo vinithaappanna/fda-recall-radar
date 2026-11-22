@@ -354,3 +354,22 @@ def data_quality_notes(records: list[dict]) -> dict:
         if d_init and d_rep < d_init:
             out["report_before_initiation"] += 1
     return out
+
+
+def firm_concentration(records: list[dict], top: int = 5) -> dict:
+    """How concentrated recalls are among firms: distinct firms, and the share
+    of recalls (and of Class I recalls) from the `top` firms with the most
+    recalls. A high share means a few recalling firms drive the window.
+    Missing firm names count as 'Unknown'. Ties break on name."""
+    counts: dict[str, list[int]] = {}
+    for rec in records:
+        c = counts.setdefault(rec.get("recalling_firm") or "Unknown", [0, 0])
+        c[0] += 1
+        c[1] += rec.get("classification") == "Class I"
+    total = sum(c[0] for c in counts.values())
+    total_i = sum(c[1] for c in counts.values())
+    ranked = sorted(counts.items(), key=lambda kv: (-kv[1][0], kv[0]))[:top]
+    return {"firms": len(counts), "recalls": total, "top": top,
+            "top_share": sum(c[0] for _f, c in ranked) / total if total else 0.0,
+            "top_class_i_share": sum(c[1] for _f, c in ranked) / total_i if total_i else 0.0,
+            "top_firms": [(f, c[0]) for f, c in ranked]}

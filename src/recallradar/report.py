@@ -46,7 +46,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     class_one_months: list[dict] | None = None,
                     month_themes: dict | None = None,
                     quality_notes: dict | None = None,
-                    archive_size: int | None = None) -> str:
+                    archive_size: int | None = None,
+                    concentration: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -154,6 +155,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Month | Recalls | Class I | Share |", "| --- | ---: | ---: | ---: |"]
         for m in class_one_months:
             lines.append(f"| {m['month']} | {m['recalls']} | {m['class_i']} | {m['share']:.0%} |")
+    if concentration and concentration.get("recalls"):
+        c = concentration
+        lines += ["", "## Firm concentration", "",
+                  f"{c['firms']} distinct firms have {c['recalls']} recall records in the window. "
+                  f"The top {c['top']} firms account for {c['top_share']:.0%} of recalls and "
+                  f"{c['top_class_i_share']:.0%} of Class I recalls.", ""]
+        lines += [f"- {f}: {n}" for f, n in c["top_firms"]]
     if quality_notes and quality_notes.get("records"):
         q = quality_notes
         lines += ["", "## Source data notes", "",
