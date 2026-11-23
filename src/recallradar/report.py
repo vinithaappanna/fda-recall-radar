@@ -48,7 +48,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     quality_notes: dict | None = None,
                     archive_size: int | None = None,
                     concentration: dict | None = None,
-                    oldest_open: list[dict] | None = None) -> str:
+                    oldest_open: list[dict] | None = None,
+                    lag_by_product: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -94,6 +95,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
             if cls in lag_by_class:
                 row = lag_by_class[cls]
                 lines.append(f"| {cls} | {row['count']} | {row['median']} | {row['p90']} |")
+    if lag_by_product:
+        lines += ["", "Lag by product type (days, slowest first):", "",
+                  "| Product type | Recalls | Median lag | p90 |",
+                  "| --- | ---: | ---: | ---: |"]
+        for ptype, row in sorted(lag_by_product.items(), key=lambda kv: (-kv[1]["median"], kv[0])):
+            lines.append(f"| {ptype} | {row['count']} | {row['median']:g} | {row['p90']} |")
     lines += ["", "## Top recalling firms", ""]
     for firm, count in summary["top_firms"]:
         lines.append(f"- {firm} ({count})")

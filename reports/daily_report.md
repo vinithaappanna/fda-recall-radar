@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-24 to 2026-11-23 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-23 12:06 UTC.
+Window: 2026-10-24 to 2026-11-23 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-23 15:07 UTC.
 
 **394 recalls** across 3 active days.
 
@@ -31,6 +31,14 @@ Days from recall initiation to the enforcement report, over the 394 recalls in t
 | Class I | 59 | 41 | 65 |
 | Class II | 298 | 42.0 | 65 |
 | Class III | 35 | 65 | 65 |
+
+Lag by product type (days, slowest first):
+
+| Product type | Recalls | Median lag | p90 |
+| --- | ---: | ---: | ---: |
+| Food | 98 | 65 | 65 |
+| Devices | 177 | 43 | 64 |
+| Drugs | 119 | 27 | 48 |
 
 ## Top recalling firms
 

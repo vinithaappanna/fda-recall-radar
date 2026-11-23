@@ -397,3 +397,18 @@ def oldest_open_recalls(records: list[dict], today: dt.date, n: int = 5) -> list
                     "recall_number": rec.get("recall_number") or "(none)"})
     out.sort(key=lambda r: (-r["age_days"], r["firm"]))
     return out[:n]
+
+
+def lag_by_product_type(records: list[dict]) -> dict[str, dict]:
+    """Reporting-lag summary per product type (Drugs, Devices, Food, ...).
+    Shows which product areas take longest to reach the enforcement report.
+    Product types with no usable lag are omitted."""
+    groups: dict[str, list[dict]] = {}
+    for rec in records:
+        groups.setdefault(rec.get("product_type") or "Unknown", []).append(rec)
+    out = {}
+    for ptype, recs in groups.items():
+        summ = lag_summary(recs)
+        if summ["count"]:
+            out[ptype] = summ
+    return out

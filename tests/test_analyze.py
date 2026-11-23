@@ -506,3 +506,22 @@ def test_oldest_open_section_renders():
                                               "classification": "Class I",
                                               "initiation_date": "2026-02-01", "age_days": 294}])
     assert "| R-2 | Old Co | Class I | 2026-02-01 | 294 |" in md
+
+
+def test_lag_by_product_type_and_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    def r(ptype, init, rep):
+        return {"product_type": ptype, "recall_initiation_date": init, "report_date": rep,
+                "classification": "Class II", "recalling_firm": "X"}
+    recs = [r("Drugs", "20261101", "20261111"), r("Drugs", "20261101", "20261121"),
+            r("Food", "20261101", "20261104"), r("Devices", "20261101", None),
+            r("Food", "20261110", "20261105")]       # negative lag skipped
+    out = analyze.lag_by_product_type(recs)
+    assert out["Drugs"]["median"] == 15 and out["Drugs"]["count"] == 2
+    assert out["Food"]["count"] == 1 and "Devices" not in out
+    summary = analyze.summarize(recs)
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                lag_by_product=out)
+    assert md.index("| Drugs | 2 | 15 | 20 |") < md.index("| Food | 1 | 3 | 3 |")
+    assert analyze.lag_by_product_type([]) == {}

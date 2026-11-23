@@ -106,7 +106,8 @@ def main() -> None:
                                quality_notes=analyze.data_quality_notes(records),
                                archive_size=len(history),
                                concentration=analyze.firm_concentration(records),
-                               oldest_open=analyze.oldest_open_recalls(records, dt.date.today())),
+                               oldest_open=analyze.oldest_open_recalls(records, dt.date.today()),
+                               lag_by_product=analyze.lag_by_product_type(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
