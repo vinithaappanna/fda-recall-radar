@@ -107,7 +107,8 @@ def main() -> None:
                                archive_size=len(history),
                                concentration=analyze.firm_concentration(records),
                                oldest_open=analyze.oldest_open_recalls(records, dt.date.today()),
-                               lag_by_product=analyze.lag_by_product_type(records)),
+                               lag_by_product=analyze.lag_by_product_type(records),
+                               slowest=analyze.slowest_reported(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

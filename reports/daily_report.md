@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-24 to 2026-11-23 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-23 15:07 UTC.
+Window: 2026-10-24 to 2026-11-23 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-23 20:07 UTC.
 
 **394 recalls** across 3 active days.
 
@@ -39,6 +39,16 @@ Lag by product type (days, slowest first):
 | Food | 98 | 65 | 65 |
 | Devices | 177 | 43 | 64 |
 | Drugs | 119 | 27 | 48 |
+
+Slowest to reach the enforcement report (dates as published by openFDA; very long lags may be old recalls newly classified or source date errors):
+
+| Recall | Firm | Class | Lag (days) |
+| --- | --- | --- | ---: |
+| Z-0320-2027 | Illumina, Inc. | Class II | 917 |
+| Z-0321-2027 | Illumina, Inc. | Class II | 917 |
+| Z-0322-2027 | Illumina, Inc. | Class II | 917 |
+| Z-0323-2027 | Illumina, Inc. | Class II | 917 |
+| Z-0324-2027 | Illumina, Inc. | Class II | 917 |
 
 ## Top recalling firms
 

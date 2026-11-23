@@ -412,3 +412,24 @@ def lag_by_product_type(records: list[dict]) -> dict[str, dict]:
         if summ["count"]:
             out[ptype] = summ
     return out
+
+
+def slowest_reported(records: list[dict], n: int = 5) -> list[dict]:
+    """The n recalls with the longest initiation-to-report lag (same date
+    rules as reporting_lag_days: missing, unparseable or negative lags are
+    skipped). Ties break by firm then recall number."""
+    out = []
+    for rec in records:
+        try:
+            lag = (parse_report_date(rec.get("report_date") or "")
+                   - parse_report_date(rec.get("recall_initiation_date") or "")).days
+        except ValueError:
+            continue
+        if lag < 0:
+            continue
+        out.append({"recall_number": rec.get("recall_number") or "(none)",
+                    "firm": rec.get("recalling_firm") or "Unknown",
+                    "classification": rec.get("classification") or "Unknown",
+                    "lag_days": lag})
+    out.sort(key=lambda r: (-r["lag_days"], r["firm"], r["recall_number"]))
+    return out[:n]

@@ -49,7 +49,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     archive_size: int | None = None,
                     concentration: dict | None = None,
                     oldest_open: list[dict] | None = None,
-                    lag_by_product: dict | None = None) -> str:
+                    lag_by_product: dict | None = None,
+                    slowest: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -101,6 +102,11 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| --- | ---: | ---: | ---: |"]
         for ptype, row in sorted(lag_by_product.items(), key=lambda kv: (-kv[1]["median"], kv[0])):
             lines.append(f"| {ptype} | {row['count']} | {row['median']:g} | {row['p90']} |")
+    if slowest:
+        lines += ["", "Slowest to reach the enforcement report (dates as published by openFDA; very long lags may be old recalls newly classified or source date errors):", "",
+                  "| Recall | Firm | Class | Lag (days) |", "| --- | --- | --- | ---: |"]
+        for o in slowest:
+            lines.append(f"| {o['recall_number']} | {o['firm']} | {o['classification']} | {o['lag_days']} |")
     lines += ["", "## Top recalling firms", ""]
     for firm, count in summary["top_firms"]:
         lines.append(f"- {firm} ({count})")

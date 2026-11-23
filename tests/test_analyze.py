@@ -525,3 +525,20 @@ def test_lag_by_product_type_and_section_renders():
                                 lag_by_product=out)
     assert md.index("| Drugs | 2 | 15 | 20 |") < md.index("| Food | 1 | 3 | 3 |")
     assert analyze.lag_by_product_type([]) == {}
+
+
+def test_slowest_reported_orders_skips_bad_and_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    def r(num, firm, init, rep):
+        return {"recall_number": num, "recalling_firm": firm, "recall_initiation_date": init,
+                "report_date": rep, "classification": "Class II", "product_type": "Food"}
+    recs = [r("R-1", "B", "20261001", "20261101"), r("R-2", "A", "20261001", "20261101"),
+            r("R-3", "C", "20261001", "20261005"), r("R-4", "D", "20261105", "20261101"),
+            r("R-5", "E", "bad", "20261101"), r("R-6", "F", None, None)]
+    out = analyze.slowest_reported(recs, n=3)
+    assert [(o["recall_number"], o["lag_days"]) for o in out] == [("R-2", 31), ("R-1", 31), ("R-3", 4)]
+    assert analyze.slowest_reported([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                slowest=out)
+    assert "| R-2 | A | Class II | 31 |" in md
