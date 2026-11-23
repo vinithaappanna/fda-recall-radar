@@ -1,10 +1,10 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-23 to 2026-11-22 (by report date). openFDA last_updated by endpoint: drug 2026-11-11, food 2026-11-11. Generated 2026-11-22 20:05 UTC.
+Window: 2026-10-24 to 2026-11-23 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-23 12:06 UTC.
 
 **394 recalls** across 3 active days.
 
-> **Stale upstream data:** openFDA has not published for over 7 days (drug 11 days, food 11 days). Recent days may be missing here until it does.
+> **Stale upstream data:** openFDA has not published for over 7 days (device 12 days, drug 12 days, food 12 days). Recent days may be missing here until it does.
 
 ## By severity
 
@@ -114,10 +114,10 @@ Days since initiation for recalls still marked Ongoing.
 
 | Class | Open | Median age (days) | Oldest (days) | Open > 90 days |
 | --- | ---: | ---: | ---: | ---: |
-| Class I | 58 | 59 | 270 | 4 |
-| Class II | 298 | 66 | 928 | 13 |
-| Class III | 35 | 90 | 90 | 0 |
-| Not Yet Classified | 2 | 114 | 198 | 1 |
+| Class I | 58 | 60 | 271 | 9 |
+| Class II | 298 | 67 | 929 | 40 |
+| Class III | 35 | 91 | 91 | 30 |
+| Not Yet Classified | 2 | 115 | 199 | 1 |
 
 ## Reason themes by month
 
@@ -149,9 +149,21 @@ Share of recalls classed as Class I (most serious) by report month. Recent month
 - ABC Compounding Co., Inc.: 19
 - PRITAM INTERNATIONAL PRIVATE LIMITED: 17
 
+## Oldest open recalls
+
+Longest-open recalls still marked Ongoing, by days since initiation.
+
+| Recall | Firm | Class | Initiated | Age (days) |
+| --- | --- | --- | --- | ---: |
+| Z-0321-2027 | Illumina, Inc. | Class II | 2024-05-08 | 929 |
+| Z-0324-2027 | Illumina, Inc. | Class II | 2024-05-08 | 929 |
+| Z-0323-2027 | Illumina, Inc. | Class II | 2024-05-08 | 929 |
+| Z-0322-2027 | Illumina, Inc. | Class II | 2024-05-08 | 929 |
+| Z-0320-2027 | Illumina, Inc. | Class II | 2024-05-08 | 929 |
+
 ## Source data notes
 
-Scope: the 394 recalls with a report date in the rolling window 2026-10-23 to 2026-11-22, not the whole archive (462 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 394: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
+Scope: the 394 recalls with a report date in the rolling window 2026-10-24 to 2026-11-23, not the whole archive (462 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 394: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 

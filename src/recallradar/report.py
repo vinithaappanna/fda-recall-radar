@@ -47,7 +47,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     month_themes: dict | None = None,
                     quality_notes: dict | None = None,
                     archive_size: int | None = None,
-                    concentration: dict | None = None) -> str:
+                    concentration: dict | None = None,
+                    oldest_open: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -163,6 +164,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   f"The top {c['top']} firms account for {c['top_share']:.0%} of recalls and "
                   f"{c['top_class_i_share']:.0%} of Class I recalls.", ""]
         lines += [f"- {f}: {n}" for f, n in c["top_firms"]]
+    if oldest_open:
+        lines += ["", "## Oldest open recalls", "",
+                  "Longest-open recalls still marked Ongoing, by days since initiation.", "",
+                  "| Recall | Firm | Class | Initiated | Age (days) |", "| --- | --- | --- | --- | ---: |"]
+        for o in oldest_open:
+            lines.append(f"| {o['recall_number']} | {o['firm']} | {o['classification']} | "
+                         f"{o['initiation_date']} | {o['age_days']} |")
     if quality_notes and quality_notes.get("records"):
         q = quality_notes
         lines += ["", "## Source data notes", "",

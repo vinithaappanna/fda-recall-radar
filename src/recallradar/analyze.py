@@ -373,3 +373,27 @@ def firm_concentration(records: list[dict], top: int = 5) -> dict:
             "top_share": sum(c[0] for _f, c in ranked) / total if total else 0.0,
             "top_class_i_share": sum(c[1] for _f, c in ranked) / total_i if total_i else 0.0,
             "top_firms": [(f, c[0]) for f, c in ranked]}
+
+
+def oldest_open_recalls(records: list[dict], today: dt.date, n: int = 5) -> list[dict]:
+    """The n oldest still-open (status Ongoing) recalls: firm, class,
+    initiation date and age in days. Records missing or with unparseable
+    initiation dates, or dated after today, are skipped. A long-open recall is
+    worth attention, especially a Class I."""
+    out = []
+    for rec in records:
+        if (rec.get("status") or "").lower() != "ongoing":
+            continue
+        try:
+            started = parse_report_date(rec.get("recall_initiation_date") or "")
+        except ValueError:
+            continue
+        age = (today - started).days
+        if age < 0:
+            continue
+        out.append({"firm": rec.get("recalling_firm") or "Unknown",
+                    "classification": rec.get("classification") or "Unknown",
+                    "initiation_date": started.isoformat(), "age_days": age,
+                    "recall_number": rec.get("recall_number") or "(none)"})
+    out.sort(key=lambda r: (-r["age_days"], r["firm"]))
+    return out[:n]

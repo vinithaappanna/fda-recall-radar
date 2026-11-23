@@ -477,3 +477,32 @@ def _summary_args():
     summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
                                   "product_type": "Drugs", "recalling_firm": "X"}])
     return summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18)
+
+
+def test_oldest_open_recalls_filters_sorts_and_caps():
+    import datetime as dt
+    from recallradar.analyze import oldest_open_recalls
+    today = dt.date(2026, 11, 22)
+    def r(firm, init, status="Ongoing", cls="Class II", num="R-1"):
+        return {"recalling_firm": firm, "recall_initiation_date": init, "status": status,
+                "classification": cls, "recall_number": num}
+    recs = [r("New", "20261120"), r("Old", "20260201", cls="Class I", num="R-2"),
+            r("Mid", "20260901", num="R-3"), r("Done", "20260101", status="Completed"),
+            r("Bad", "garbage"), r("Future", "20270101")]
+    out = oldest_open_recalls(recs, today)
+    assert [(o["firm"], o["age_days"]) for o in out] == [("Old", 294), ("Mid", 82), ("New", 2)]
+    assert out[0]["classification"] == "Class I" and out[0]["initiation_date"] == "2026-02-01"
+    assert len(oldest_open_recalls(recs * 3, today, n=2)) == 2
+    assert oldest_open_recalls([], today) == []
+
+
+def test_oldest_open_section_renders():
+    from recallradar import analyze, report
+    import datetime as dt
+    summary = analyze.summarize([{"report_date": "20261110", "classification": "Class I",
+                                  "product_type": "Drugs", "recalling_firm": "X"}])
+    md = report.render_markdown(summary, [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                oldest_open=[{"recall_number": "R-2", "firm": "Old Co",
+                                              "classification": "Class I",
+                                              "initiation_date": "2026-02-01", "age_days": 294}])
+    assert "| R-2 | Old Co | Class I | 2026-02-01 | 294 |" in md

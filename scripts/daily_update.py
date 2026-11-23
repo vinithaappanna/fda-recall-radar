@@ -105,7 +105,8 @@ def main() -> None:
                                month_themes=analyze.themes_by_month(records),
                                quality_notes=analyze.data_quality_notes(records),
                                archive_size=len(history),
-                               concentration=analyze.firm_concentration(records)),
+                               concentration=analyze.firm_concentration(records),
+                               oldest_open=analyze.oldest_open_recalls(records, dt.date.today())),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
