@@ -449,3 +449,19 @@ def lag_distribution(records: list[dict]) -> list[dict]:
         n = sum(1 for lag in lags if lag >= lo and (hi is None or lag <= hi))
         out.append({"bucket": label, "recalls": n, "share": round(n / len(lags), 4) if lags else 0.0})
     return out
+
+
+def class_mix_by_firm(records: list[dict], min_recalls: int = 3, n: int = 5) -> list[dict]:
+    """Firms with at least min_recalls recalls, ranked by Class I share (ties
+    by recall count, then name): recalls, Class I count and share. Small
+    counts make shares noisy, hence the floor; informational only."""
+    agg: dict[str, dict] = {}
+    for rec in records:
+        a = agg.setdefault(rec.get("recalling_firm") or "Unknown", {"recalls": 0, "class_i": 0})
+        a["recalls"] += 1
+        a["class_i"] += rec.get("classification") == "Class I"
+    out = [{"firm": f, "recalls": a["recalls"], "class_i": a["class_i"],
+            "class_i_share": round(a["class_i"] / a["recalls"], 4)}
+           for f, a in agg.items() if a["recalls"] >= min_recalls and a["class_i"]]
+    out.sort(key=lambda r: (-r["class_i_share"], -r["recalls"], r["firm"]))
+    return out[:n]

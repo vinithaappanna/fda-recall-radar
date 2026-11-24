@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-25 to 2026-11-24 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-24 12:05 UTC.
+Window: 2026-10-25 to 2026-11-24 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-24 15:05 UTC.
 
 **394 recalls** across 3 active days.
 
@@ -41,6 +41,16 @@ Lag distribution (recalls with both dates):
 | 31-60 days | 196 | 49.8% |
 | 61-90 days | 76 | 19.3% |
 | over 90 days | 13 | 3.3% |
+
+Firms with the highest Class I share (3+ recalls in the window; small counts are noisy):
+
+| Firm | Recalls | Class I | Class I share |
+| --- | ---: | ---: | ---: |
+| Ventec Life Systems, Inc. | 12 | 12 | 100.0% |
+| Cardinal Health 200, LLC | 11 | 11 | 100.0% |
+| Abiomed, Inc. | 3 | 3 | 100.0% |
+| GF Blends Inc | 3 | 3 | 100.0% |
+| Oliva on Main | 3 | 3 | 100.0% |
 
 Lag by product type (days, slowest first):
 

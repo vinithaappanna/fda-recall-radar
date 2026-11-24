@@ -51,7 +51,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     oldest_open: list[dict] | None = None,
                     lag_by_product: dict | None = None,
                     slowest: list[dict] | None = None,
-                    lag_dist: list[dict] | None = None) -> str:
+                    lag_dist: list[dict] | None = None,
+                    firm_class_mix: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -102,6 +103,11 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Lag | Recalls | Share |", "| --- | ---: | ---: |"]
         for b in lag_dist:
             lines.append(f"| {b['bucket']} | {b['recalls']} | {b['share']:.1%} |")
+    if firm_class_mix:
+        lines += ["", "Firms with the highest Class I share (3+ recalls in the window; small counts are noisy):", "",
+                  "| Firm | Recalls | Class I | Class I share |", "| --- | ---: | ---: | ---: |"]
+        for f in firm_class_mix:
+            lines.append(f"| {f['firm']} | {f['recalls']} | {f['class_i']} | {f['class_i_share']:.1%} |")
     if lag_by_product:
         lines += ["", "Lag by product type (days, slowest first):", "",
                   "| Product type | Recalls | Median lag | p90 |",

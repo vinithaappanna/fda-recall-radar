@@ -559,3 +559,17 @@ def test_lag_distribution_buckets_edges_and_render():
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 lag_dist=analyze.lag_distribution(recs))
     assert "| 0-14 days | 2 | 25.0% |" in md
+
+
+def test_class_mix_by_firm_floor_order_and_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    def r(firm, cls): return {"recalling_firm": firm, "classification": cls}
+    recs = ([r("A", "Class I")] * 2 + [r("A", "Class II")] + [r("B", "Class I")] * 3
+            + [r("C", "Class II")] * 5 + [r("D", "Class I")])        # D below floor, C no Class I
+    out = analyze.class_mix_by_firm(recs)
+    assert [(o["firm"], o["class_i_share"]) for o in out] == [("B", 1.0), ("A", 0.6667)]
+    assert analyze.class_mix_by_firm([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                firm_class_mix=out)
+    assert "| B | 3 | 3 | 100.0% |" in md
