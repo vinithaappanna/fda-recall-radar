@@ -110,7 +110,8 @@ def main() -> None:
                                lag_by_product=analyze.lag_by_product_type(records),
                                slowest=analyze.slowest_reported(records),
                                lag_dist=analyze.lag_distribution(records),
-                               firm_class_mix=analyze.class_mix_by_firm(records)),
+                               firm_class_mix=analyze.class_mix_by_firm(records),
+                               date_gaps=analyze.report_date_gaps(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

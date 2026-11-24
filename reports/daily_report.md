@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-25 to 2026-11-24 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-24 15:05 UTC.
+Window: 2026-10-25 to 2026-11-24 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-24 20:04 UTC.
 
 **394 recalls** across 3 active days.
 
@@ -51,6 +51,13 @@ Firms with the highest Class I share (3+ recalls in the window; small counts are
 | Abiomed, Inc. | 3 | 3 | 100.0% |
 | GF Blends Inc | 3 | 3 | 100.0% |
 | Oliva on Main | 3 | 3 | 100.0% |
+
+Publication rhythm: recalls in the window carry 3 distinct report dates, median gap 7 days. openFDA publishes in batches. Longest gaps:
+
+| From | To | Days |
+| --- | --- | ---: |
+| 2026-10-28 | 2026-11-04 | 7 |
+| 2026-11-04 | 2026-11-11 | 7 |
 
 Lag by product type (days, slowest first):
 

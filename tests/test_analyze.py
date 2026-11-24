@@ -573,3 +573,16 @@ def test_class_mix_by_firm_floor_order_and_render():
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 firm_class_mix=out)
     assert "| B | 3 | 3 | 100.0% |" in md
+
+
+def test_report_date_gaps_median_longest_and_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    recs = [{"report_date": d} for d in ["20261101", "20261101", "20261103", "20261110", "20261111", "bad", None]]
+    out = analyze.report_date_gaps(recs, n=2)
+    assert out["report_dates"] == 4 and out["median_gap_days"] == 2
+    assert out["longest"] == [{"from": "2026-11-03", "to": "2026-11-10", "days": 7},
+                              {"from": "2026-11-01", "to": "2026-11-03", "days": 2}]
+    assert analyze.report_date_gaps([]) == {"report_dates": 0, "median_gap_days": None, "longest": []}
+    md = report.render_markdown(analyze.summarize([r for r in recs if r["report_date"] and r["report_date"] != "bad"]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), date_gaps=out)
+    assert "| 2026-11-03 | 2026-11-10 | 7 |" in md

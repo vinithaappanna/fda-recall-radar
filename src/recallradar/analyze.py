@@ -465,3 +465,26 @@ def class_mix_by_firm(records: list[dict], min_recalls: int = 3, n: int = 5) -> 
            for f, a in agg.items() if a["recalls"] >= min_recalls and a["class_i"]]
     out.sort(key=lambda r: (-r["class_i_share"], -r["recalls"], r["firm"]))
     return out[:n]
+
+
+def report_date_gaps(records: list[dict], n: int = 3) -> dict:
+    """Publication rhythm from distinct report dates: how many distinct dates,
+    the longest gaps between consecutive dates (days, with the dates either
+    side) and the median gap. openFDA publishes in batches, so long gaps are
+    expected; this shows how lumpy the feed is. Unparseable dates skipped."""
+    days = set()
+    for rec in records:
+        try:
+            days.add(parse_report_date(rec.get("report_date") or ""))
+        except ValueError:
+            pass
+    days = sorted(days)
+    gaps = [{"from": a.isoformat(), "to": b.isoformat(), "days": (b - a).days}
+            for a, b in zip(days, days[1:])]
+    sizes = sorted(g["days"] for g in gaps)
+    median = None
+    if sizes:
+        mid = len(sizes) // 2
+        median = sizes[mid] if len(sizes) % 2 else (sizes[mid - 1] + sizes[mid]) / 2
+    longest = sorted(gaps, key=lambda g: (-g["days"], g["from"]))[:n]
+    return {"report_dates": len(days), "median_gap_days": median, "longest": longest}

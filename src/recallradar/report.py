@@ -52,7 +52,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     lag_by_product: dict | None = None,
                     slowest: list[dict] | None = None,
                     lag_dist: list[dict] | None = None,
-                    firm_class_mix: list[dict] | None = None) -> str:
+                    firm_class_mix: list[dict] | None = None,
+                    date_gaps: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -108,6 +109,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Firm | Recalls | Class I | Class I share |", "| --- | ---: | ---: | ---: |"]
         for f in firm_class_mix:
             lines.append(f"| {f['firm']} | {f['recalls']} | {f['class_i']} | {f['class_i_share']:.1%} |")
+    if date_gaps and date_gaps.get("report_dates", 0) > 1:
+        lines += ["", f"Publication rhythm: recalls in the window carry {date_gaps['report_dates']} distinct report dates, "
+                  f"median gap {date_gaps['median_gap_days']:g} days. openFDA publishes in batches. Longest gaps:", "",
+                  "| From | To | Days |", "| --- | --- | ---: |"]
+        for g in date_gaps["longest"]:
+            lines.append(f"| {g['from']} | {g['to']} | {g['days']} |")
     if lag_by_product:
         lines += ["", "Lag by product type (days, slowest first):", "",
                   "| Product type | Recalls | Median lag | p90 |",
