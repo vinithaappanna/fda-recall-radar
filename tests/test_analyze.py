@@ -542,3 +542,20 @@ def test_slowest_reported_orders_skips_bad_and_renders():
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
                                 slowest=out)
     assert "| R-2 | A | Class II | 31 |" in md
+
+
+def test_lag_distribution_buckets_edges_and_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    def r(lag):
+        init = dt.date(2026, 1, 1)
+        return {"recall_initiation_date": init.strftime("%Y%m%d"),
+                "report_date": (init + dt.timedelta(days=lag)).strftime("%Y%m%d")}
+    recs = [r(0), r(14), r(15), r(30), r(31), r(90), r(91), r(500), {"report_date": "20260101"}]
+    out = {b["bucket"]: b["recalls"] for b in analyze.lag_distribution(recs)}
+    assert out == {"0-14 days": 2, "15-30 days": 2, "31-60 days": 1, "61-90 days": 1, "over 90 days": 2}
+    assert sum(b["share"] for b in analyze.lag_distribution(recs)) > 0.999
+    assert all(b["recalls"] == 0 and b["share"] == 0.0 for b in analyze.lag_distribution([]))
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18),
+                                lag_dist=analyze.lag_distribution(recs))
+    assert "| 0-14 days | 2 | 25.0% |" in md

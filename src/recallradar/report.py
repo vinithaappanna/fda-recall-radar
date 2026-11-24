@@ -50,7 +50,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     concentration: dict | None = None,
                     oldest_open: list[dict] | None = None,
                     lag_by_product: dict | None = None,
-                    slowest: list[dict] | None = None) -> str:
+                    slowest: list[dict] | None = None,
+                    lag_dist: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -96,6 +97,11 @@ def render_markdown(summary: dict, spotlight: list[dict],
             if cls in lag_by_class:
                 row = lag_by_class[cls]
                 lines.append(f"| {cls} | {row['count']} | {row['median']} | {row['p90']} |")
+    if lag_dist and any(b["recalls"] for b in lag_dist):
+        lines += ["", "Lag distribution (recalls with both dates):", "",
+                  "| Lag | Recalls | Share |", "| --- | ---: | ---: |"]
+        for b in lag_dist:
+            lines.append(f"| {b['bucket']} | {b['recalls']} | {b['share']:.1%} |")
     if lag_by_product:
         lines += ["", "Lag by product type (days, slowest first):", "",
                   "| Product type | Recalls | Median lag | p90 |",

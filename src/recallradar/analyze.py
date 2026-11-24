@@ -433,3 +433,19 @@ def slowest_reported(records: list[dict], n: int = 5) -> list[dict]:
                     "lag_days": lag})
     out.sort(key=lambda r: (-r["lag_days"], r["firm"], r["recall_number"]))
     return out[:n]
+
+
+LAG_BUCKETS = [("0-14 days", 0, 14), ("15-30 days", 15, 30), ("31-60 days", 31, 60),
+               ("61-90 days", 61, 90), ("over 90 days", 91, None)]
+
+
+def lag_distribution(records: list[dict]) -> list[dict]:
+    """Recalls per initiation-to-report lag bucket with share of recalls that
+    have a usable lag (same date rules as reporting_lag_days). Buckets are
+    fixed so reports stay comparable; empty buckets are kept at 0."""
+    lags = reporting_lag_days(records)
+    out = []
+    for label, lo, hi in LAG_BUCKETS:
+        n = sum(1 for lag in lags if lag >= lo and (hi is None or lag <= hi))
+        out.append({"bucket": label, "recalls": n, "share": round(n / len(lags), 4) if lags else 0.0})
+    return out
