@@ -531,3 +531,19 @@ def archive_by_report_month(history: list[dict]) -> list[dict]:
         a["class_i"] += rec.get("classification") == "Class I"
     return [{"month": m, "recalls": a["recalls"], "class_i": a["class_i"],
              "class_i_share": round(a["class_i"] / a["recalls"], 4)} for m, a in sorted(months.items())]
+
+
+def status_by_classification(records: list[dict]) -> list[dict]:
+    """Per classification: recalls, how many are still Ongoing and the ongoing
+    share. Missing classification or status is grouped as "Unknown". Ordered
+    Class I, II, III, then others alphabetically."""
+    tally: dict[str, list[int]] = {}
+    for rec in records:
+        cls = rec.get("classification") or "Unknown"
+        row = tally.setdefault(cls, [0, 0])
+        row[0] += 1
+        if (rec.get("status") or "").lower() == "ongoing":
+            row[1] += 1
+    order = {"Class I": 0, "Class II": 1, "Class III": 2}
+    return [{"classification": c, "recalls": n, "ongoing": o, "ongoing_share": round(o / n, 4)}
+            for c, (n, o) in sorted(tally.items(), key=lambda kv: (order.get(kv[0], 3), kv[0]))]

@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 15:04 UTC.
+Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 20:04 UTC.
 
 **509 recalls** across 4 active days.
 
@@ -64,6 +64,15 @@ Median lag by report month (months with 10+ recalls; reflects openFDA batch timi
 | --- | ---: | ---: |
 | 2026-10 | 196 | 48 |
 | 2026-11 | 313 | 42 |
+
+Recall status by classification (current window; Ongoing means FDA has not yet terminated the recall, not that products remain on shelves):
+
+| Classification | Recalls | Ongoing | Ongoing share |
+| --- | ---: | ---: | ---: |
+| Class I | 69 | 61 | 88.4% |
+| Class II | 401 | 374 | 93.3% |
+| Class III | 37 | 7 | 18.9% |
+| Not Yet Classified | 2 | 2 | 100.0% |
 
 Archive coverage by report month (whole archive; early months are partial because the archive only holds recalls fetched since this project started):
 

@@ -55,7 +55,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     firm_class_mix: list[dict] | None = None,
                     date_gaps: dict | None = None,
                     lag_months: list[dict] | None = None,
-                    archive_months: list[dict] | None = None) -> str:
+                    archive_months: list[dict] | None = None,
+                    status_classes: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -122,6 +123,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Report month | Recalls | Median lag (days) |", "| --- | ---: | ---: |"]
         for m in lag_months:
             lines.append(f"| {m['month']} | {m['recalls']} | {m['median_lag']:g} |")
+    if status_classes:
+        lines += ["", "Recall status by classification (current window; Ongoing means FDA has not yet "
+                  "terminated the recall, not that products remain on shelves):", "",
+                  "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
+        for c in status_classes:
+            lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
     if archive_months:
         lines += ["", "Archive coverage by report month (whole archive; early months are partial because "
                   "the archive only holds recalls fetched since this project started):", "",

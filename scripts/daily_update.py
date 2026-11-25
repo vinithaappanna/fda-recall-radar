@@ -113,7 +113,8 @@ def main() -> None:
                                firm_class_mix=analyze.class_mix_by_firm(records),
                                date_gaps=analyze.report_date_gaps(records),
                                lag_months=analyze.lag_by_report_month(records),
-                               archive_months=analyze.archive_by_report_month(list(history.values()))),
+                               archive_months=analyze.archive_by_report_month(list(history.values())),
+                               status_classes=analyze.status_by_classification(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",

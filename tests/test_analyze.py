@@ -613,3 +613,16 @@ def test_archive_by_report_month_counts_shares_and_render():
     assert analyze.archive_by_report_month([]) == []
     md = report.render_markdown(analyze.summarize(hist[:3]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), archive_months=out)
     assert "| 2026-09 | 2 | 1 | 50.0% |" in md
+
+
+def test_status_by_classification_order_unknown_and_render():
+    from recallradar import analyze, report
+    recs = [{"classification": "Class II", "status": "Ongoing"}, {"classification": "Class I", "status": "Terminated"},
+            {"classification": "Class I", "status": "ongoing"}, {"classification": "Class I", "status": "Ongoing"},
+            {"status": "Ongoing"}]
+    out = analyze.status_by_classification(recs)
+    assert [r["classification"] for r in out] == ["Class I", "Class II", "Unknown"]
+    assert out[0] == {"classification": "Class I", "recalls": 3, "ongoing": 2, "ongoing_share": 0.6667}
+    assert analyze.status_by_classification([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), status_classes=out)
+    assert "| Class I | 3 | 2 | 66.7% |" in md
