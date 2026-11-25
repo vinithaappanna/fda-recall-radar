@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 12:04 UTC.
+Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 15:04 UTC.
 
 **509 recalls** across 4 active days.
 
@@ -64,6 +64,13 @@ Median lag by report month (months with 10+ recalls; reflects openFDA batch timi
 | --- | ---: | ---: |
 | 2026-10 | 196 | 48 |
 | 2026-11 | 313 | 42 |
+
+Archive coverage by report month (whole archive; early months are partial because the archive only holds recalls fetched since this project started):
+
+| Report month | Archived | Class I | Class I share |
+| --- | ---: | ---: | ---: |
+| 2026-10 | 266 | 29 | 10.9% |
+| 2026-11 | 311 | 43 | 13.8% |
 
 Lag by product type (days, slowest first):
 

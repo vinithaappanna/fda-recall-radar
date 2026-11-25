@@ -513,3 +513,21 @@ def lag_by_report_month(records: list[dict], min_recalls: int = 10) -> list[dict
         median = lags[mid] if len(lags) % 2 else (lags[mid - 1] + lags[mid]) / 2
         out.append({"month": month, "recalls": len(lags), "median_lag": median})
     return out
+
+
+def archive_by_report_month(history: list[dict]) -> list[dict]:
+    """Archived recalls per report month (whole archive, not the rolling
+    window), with Class I counts and shares, oldest first. The archive only
+    holds what this project has fetched since it started, so early months are
+    partial: read it as coverage, not a historical series."""
+    months: dict[str, dict] = {}
+    for rec in history:
+        try:
+            m = parse_report_date(rec.get("report_date") or "").strftime("%Y-%m")
+        except ValueError:
+            continue
+        a = months.setdefault(m, {"recalls": 0, "class_i": 0})
+        a["recalls"] += 1
+        a["class_i"] += rec.get("classification") == "Class I"
+    return [{"month": m, "recalls": a["recalls"], "class_i": a["class_i"],
+             "class_i_share": round(a["class_i"] / a["recalls"], 4)} for m, a in sorted(months.items())]

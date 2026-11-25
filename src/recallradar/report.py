@@ -54,7 +54,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     lag_dist: list[dict] | None = None,
                     firm_class_mix: list[dict] | None = None,
                     date_gaps: dict | None = None,
-                    lag_months: list[dict] | None = None) -> str:
+                    lag_months: list[dict] | None = None,
+                    archive_months: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -121,6 +122,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Report month | Recalls | Median lag (days) |", "| --- | ---: | ---: |"]
         for m in lag_months:
             lines.append(f"| {m['month']} | {m['recalls']} | {m['median_lag']:g} |")
+    if archive_months:
+        lines += ["", "Archive coverage by report month (whole archive; early months are partial because "
+                  "the archive only holds recalls fetched since this project started):", "",
+                  "| Report month | Archived | Class I | Class I share |", "| --- | ---: | ---: | ---: |"]
+        for m in archive_months:
+            lines.append(f"| {m['month']} | {m['recalls']} | {m['class_i']} | {m['class_i_share']:.1%} |")
     if lag_by_product:
         lines += ["", "Lag by product type (days, slowest first):", "",
                   "| Product type | Recalls | Median lag | p90 |",

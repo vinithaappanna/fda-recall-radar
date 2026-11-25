@@ -600,3 +600,16 @@ def test_lag_by_report_month_median_floor_and_render():
     assert analyze.lag_by_report_month([]) == []
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), lag_months=out)
     assert "| 2026-10 | 4 | 25 |" in md
+
+
+def test_archive_by_report_month_counts_shares_and_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    hist = [{"report_date": "20260915", "classification": "Class I"}, {"report_date": "20260920", "classification": "Class II"},
+            {"report_date": "20261001", "classification": "Class I"}, {"report_date": "junk", "classification": "Class I"}]
+    out = analyze.archive_by_report_month(hist)
+    assert out == [{"month": "2026-09", "recalls": 2, "class_i": 1, "class_i_share": 0.5},
+                   {"month": "2026-10", "recalls": 1, "class_i": 1, "class_i_share": 1.0}]
+    assert analyze.archive_by_report_month([]) == []
+    md = report.render_markdown(analyze.summarize(hist[:3]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), archive_months=out)
+    assert "| 2026-09 | 2 | 1 | 50.0% |" in md
