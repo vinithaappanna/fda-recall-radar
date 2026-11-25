@@ -488,3 +488,28 @@ def report_date_gaps(records: list[dict], n: int = 3) -> dict:
         median = sizes[mid] if len(sizes) % 2 else (sizes[mid - 1] + sizes[mid]) / 2
     longest = sorted(gaps, key=lambda g: (-g["days"], g["from"]))[:n]
     return {"report_dates": len(days), "median_gap_days": median, "longest": longest}
+
+
+def lag_by_report_month(records: list[dict], min_recalls: int = 10) -> list[dict]:
+    """Median reporting lag (days from initiation to enforcement report) per
+    report month, oldest first. Months with fewer than min_recalls usable
+    lags are skipped. openFDA publishes in batches, so a month's lag mostly
+    reflects what was published when; informational only."""
+    by_month: dict[str, list[int]] = {}
+    for rec in records:
+        try:
+            rep = parse_report_date(rec.get("report_date") or "")
+            lag = (rep - parse_report_date(rec.get("recall_initiation_date") or "")).days
+        except ValueError:
+            continue
+        if lag >= 0:
+            by_month.setdefault(rep.strftime("%Y-%m"), []).append(lag)
+    out = []
+    for month in sorted(by_month):
+        lags = sorted(by_month[month])
+        if len(lags) < min_recalls:
+            continue
+        mid = len(lags) // 2
+        median = lags[mid] if len(lags) % 2 else (lags[mid - 1] + lags[mid]) / 2
+        out.append({"month": month, "recalls": len(lags), "median_lag": median})
+    return out

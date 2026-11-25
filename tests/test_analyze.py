@@ -586,3 +586,17 @@ def test_report_date_gaps_median_longest_and_render():
     assert analyze.report_date_gaps([]) == {"report_dates": 0, "median_gap_days": None, "longest": []}
     md = report.render_markdown(analyze.summarize([r for r in recs if r["report_date"] and r["report_date"] != "bad"]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), date_gaps=out)
     assert "| 2026-11-03 | 2026-11-10 | 7 |" in md
+
+
+def test_lag_by_report_month_median_floor_and_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    def r(rep, lag):
+        init = dt.date.fromisoformat(rep) - dt.timedelta(days=lag)
+        return {"report_date": rep.replace("-", ""), "recall_initiation_date": init.strftime("%Y%m%d")}
+    recs = [r("2026-10-05", l) for l in (10, 20, 30, 40)] + [r("2026-11-05", 5), r("2026-11-06", 9)]
+    out = analyze.lag_by_report_month(recs, min_recalls=3)
+    assert out == [{"month": "2026-10", "recalls": 4, "median_lag": 25.0}]
+    assert analyze.lag_by_report_month([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), lag_months=out)
+    assert "| 2026-10 | 4 | 25 |" in md

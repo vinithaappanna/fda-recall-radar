@@ -1,110 +1,117 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-25 to 2026-11-24 (by report date). openFDA last_updated by endpoint: device 2026-11-11, drug 2026-11-11, food 2026-11-11. Generated 2026-11-24 20:04 UTC.
+Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 12:04 UTC.
 
-**394 recalls** across 3 active days.
-
-> **Stale upstream data:** openFDA has not published for over 7 days (device 13 days, drug 13 days, food 13 days). Recent days may be missing here until it does.
+**509 recalls** across 4 active days.
 
 ## By severity
 
 | Classification | Recalls |
 | --- | ---: |
-| Class I | 59 |
-| Class II | 298 |
-| Class III | 35 |
+| Class I | 69 |
+| Class II | 401 |
+| Class III | 37 |
 
 ## By product area
 
 | Product type | Recalls |
 | --- | ---: |
-| Devices | 177 |
-| Drugs | 119 |
-| Food | 98 |
+| Devices | 265 |
+| Drugs | 132 |
+| Food | 112 |
 
 ## Reporting lag
 
-Days from recall initiation to the enforcement report, over the 394 recalls in the window with both dates: median **43.0**, p90 65, longest 917.
+Days from recall initiation to the enforcement report, over the 509 recalls in the window with both dates: median **43**, p90 65, longest 1713.
 
 | Classification | Recalls | Median lag | p90 |
 | --- | ---: | ---: | ---: |
-| Class I | 59 | 41 | 65 |
-| Class II | 298 | 42.0 | 65 |
-| Class III | 35 | 65 | 65 |
+| Class I | 69 | 41 | 65 |
+| Class II | 401 | 43 | 65 |
+| Class III | 37 | 65 | 65 |
 
 Lag distribution (recalls with both dates):
 
 | Lag | Recalls | Share |
 | --- | ---: | ---: |
-| 0-14 days | 2 | 0.5% |
-| 15-30 days | 107 | 27.2% |
-| 31-60 days | 196 | 49.8% |
-| 61-90 days | 76 | 19.3% |
-| over 90 days | 13 | 3.3% |
+| 0-14 days | 3 | 0.6% |
+| 15-30 days | 122 | 24.0% |
+| 31-60 days | 273 | 53.6% |
+| 61-90 days | 84 | 16.5% |
+| over 90 days | 27 | 5.3% |
 
 Firms with the highest Class I share (3+ recalls in the window; small counts are noisy):
 
 | Firm | Recalls | Class I | Class I share |
 | --- | ---: | ---: | ---: |
+| Cardinal Health 200, LLC | 13 | 13 | 100.0% |
 | Ventec Life Systems, Inc. | 12 | 12 | 100.0% |
-| Cardinal Health 200, LLC | 11 | 11 | 100.0% |
 | Abiomed, Inc. | 3 | 3 | 100.0% |
 | GF Blends Inc | 3 | 3 | 100.0% |
 | Oliva on Main | 3 | 3 | 100.0% |
 
-Publication rhythm: recalls in the window carry 3 distinct report dates, median gap 7 days. openFDA publishes in batches. Longest gaps:
+Publication rhythm: recalls in the window carry 4 distinct report dates, median gap 7 days. openFDA publishes in batches. Longest gaps:
 
 | From | To | Days |
 | --- | --- | ---: |
 | 2026-10-28 | 2026-11-04 | 7 |
 | 2026-11-04 | 2026-11-11 | 7 |
+| 2026-11-11 | 2026-11-18 | 7 |
+
+Median lag by report month (months with 10+ recalls; reflects openFDA batch timing):
+
+| Report month | Recalls | Median lag (days) |
+| --- | ---: | ---: |
+| 2026-10 | 196 | 48 |
+| 2026-11 | 313 | 42 |
 
 Lag by product type (days, slowest first):
 
 | Product type | Recalls | Median lag | p90 |
 | --- | ---: | ---: | ---: |
-| Food | 98 | 65 | 65 |
-| Devices | 177 | 43 | 64 |
-| Drugs | 119 | 27 | 48 |
+| Food | 112 | 65 | 65 |
+| Devices | 265 | 48 | 75 |
+| Drugs | 132 | 27 | 48 |
 
 Slowest to reach the enforcement report (dates as published by openFDA; very long lags may be old recalls newly classified or source date errors):
 
 | Recall | Firm | Class | Lag (days) |
 | --- | --- | --- | ---: |
+| Z-0428-2027 | Philips Ultrasound, LLC | Class II | 1713 |
 | Z-0320-2027 | Illumina, Inc. | Class II | 917 |
 | Z-0321-2027 | Illumina, Inc. | Class II | 917 |
 | Z-0322-2027 | Illumina, Inc. | Class II | 917 |
 | Z-0323-2027 | Illumina, Inc. | Class II | 917 |
-| Z-0324-2027 | Illumina, Inc. | Class II | 917 |
 
 ## Top recalling firms
 
 - El Ruisenor De Mexico, Inc. (61)
 - Victory Medical Center Pharmacy (42)
 - Boston Scientific Cork, Ltd. (41)
+- Medline Industries, LP (23)
 - ABC Compounding Co., Inc. (19)
 - PRITAM INTERNATIONAL PRIVATE LIMITED (17)
 - Henry Schein Inc. (13)
-- Medline Industries, LP (13)
+- Cardinal Health 200, LLC (13)
 - Ventec Life Systems, Inc. (12)
-- Cardinal Health 200, LLC (11)
-- PHILIPS MEDICAL SYSTEMS NEDERLAND B.V. (9)
+- Physitemp Instruments, LLC (10)
 
 ## Severity by product area
 
 | Product type | Class I | Class II | Class III | Class I share |
 | --- | ---: | ---: | ---: | ---: |
-| Devices | 29 | 148 | 0 | 16% |
-| Drugs | 3 | 111 | 4 | 3% |
-| Food | 27 | 39 | 31 | 28% |
+| Devices | 32 | 232 | 1 | 12% |
+| Drugs | 5 | 121 | 5 | 4% |
+| Food | 32 | 48 | 31 | 29% |
 
 ## Recalls by week
 
 | Week of | Recalls | Class I |
 | --- | ---: | ---: |
-| 2026-10-26 | 194 | 25 |
-| 2026-11-02 | 77 | 12 |
-| 2026-11-09 | 123 | 22 |
+| 2026-10-26 | 196 | 26 |
+| 2026-11-02 | 79 | 12 |
+| 2026-11-09 | 126 | 23 |
+| 2026-11-16 | 108 | 8 |
 
 ## Recall reason themes
 
@@ -114,44 +121,45 @@ Keyword grouping of the free-text reason (illustrative heuristic, not an FDA tax
 
 | Theme | Recalls | Class I |
 | --- | ---: | ---: |
-| Device defect / performance | 98 | 24 |
-| Labeling / undeclared allergen | 88 | 18 |
+| Device defect / performance | 104 | 26 |
+| Labeling / undeclared allergen | 101 | 19 |
 | Manufacturing practice (CGMP) | 85 | 0 |
-| Software / cybersecurity | 26 | 0 |
-| Sterility | 24 | 0 |
-| Contamination / particulate | 22 | 12 |
-| Other | 20 | 2 |
-| Potency / dissolution / stability | 18 | 3 |
-| Regulatory clearance | 13 | 0 |
+| Other | 73 | 3 |
+| Contamination / particulate | 50 | 18 |
+| Software / cybersecurity | 36 | 0 |
+| Sterility | 27 | 0 |
+| Potency / dissolution / stability | 19 | 3 |
+| Regulatory clearance | 14 | 0 |
 
 ## Top reason theme by product area
 
 | Product area | Recalls | Top theme | Share of area |
 | --- | ---: | --- | ---: |
-| Devices | 177 | Device defect / performance | 55% |
-| Drugs | 119 | Manufacturing practice (CGMP) | 70% |
-| Food | 98 | Labeling / undeclared allergen | 80% |
+| Devices | 265 | Device defect / performance | 39% |
+| Drugs | 132 | Manufacturing practice (CGMP) | 63% |
+| Food | 112 | Labeling / undeclared allergen | 72% |
 
 ## Top recalling firms by product area
 
 | Product area | Firm | Recalls | Class I |
 | --- | --- | ---: | ---: |
 | Devices | Boston Scientific Cork, Ltd. | 41 | 0 |
-| Devices | Henry Schein Inc. | 13 | 0 |
-| Devices | Medline Industries, LP | 13 | 0 |
+| Devices | Medline Industries, LP | 23 | 0 |
+| Devices | Cardinal Health 200, LLC | 13 | 13 |
 | Drugs | Victory Medical Center Pharmacy | 42 | 0 |
 | Drugs | ABC Compounding Co., Inc. | 19 | 0 |
 | Drugs | PRITAM INTERNATIONAL PRIVATE LIMITED | 17 | 0 |
 | Food | El Ruisenor De Mexico, Inc. | 61 | 5 |
+| Food | Snack Right Super Foods, Inc. | 4 | 0 |
 | Food | GF Blends Inc | 3 | 3 |
-| Food | Oliva on Main | 3 | 3 |
 
 ## Recall status
 
 | Status | Recalls | Share |
 | --- | ---: | ---: |
-| Ongoing | 393 | 100% |
-| Completed | 1 | 0% |
+| Ongoing | 444 | 87% |
+| Terminated | 62 | 12% |
+| Completed | 3 | 1% |
 
 ## Age of open recalls
 
@@ -159,19 +167,19 @@ Days since initiation for recalls still marked Ongoing.
 
 | Class | Open | Median age (days) | Oldest (days) | Open > 90 days |
 | --- | ---: | ---: | ---: | ---: |
-| Class I | 58 | 61 | 272 | 9 |
-| Class II | 298 | 68 | 930 | 40 |
-| Class III | 35 | 92 | 92 | 30 |
-| Not Yet Classified | 2 | 116 | 200 | 1 |
+| Class I | 61 | 62 | 273 | 5 |
+| Class II | 374 | 62 | 1720 | 27 |
+| Class III | 7 | 48 | 55 | 0 |
+| Not Yet Classified | 2 | 142 | 201 | 1 |
 
 ## Reason themes by month
 
 Top reason themes overall (keyword heuristic, not an FDA taxonomy), by report month.
 
-| Month | Device defect / performance | Labeling / undeclared allergen | Manufacturing practice (CGMP) | Software / cybersecurity | Other themes |
+| Month | Device defect / performance | Labeling / undeclared allergen | Manufacturing practice (CGMP) | Other | Other themes |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| 2026-10 | 73 | 69 | 19 | 3 | 30 |
-| 2026-11 | 25 | 19 | 66 | 23 | 67 |
+| 2026-10 | 73 | 69 | 19 | 7 | 28 |
+| 2026-11 | 31 | 32 | 66 | 66 | 118 |
 
 ## Class I share by month
 
@@ -179,20 +187,20 @@ Share of recalls classed as Class I (most serious) by report month. Recent month
 
 | Month | Recalls | Class I | Share |
 | --- | ---: | ---: | ---: |
-| 2026-10 | 194 | 25 | 13% |
-| 2026-11 | 200 | 34 | 17% |
+| 2026-10 | 196 | 26 | 13% |
+| 2026-11 | 313 | 43 | 14% |
 
 ![Top recalling firms](top_firms.png)
 
 ## Firm concentration
 
-111 distinct firms have 394 recall records in the window. The top 5 firms account for 46% of recalls and 8% of Class I recalls.
+149 distinct firms have 509 recall records in the window. The top 5 firms account for 37% of recalls and 7% of Class I recalls.
 
 - El Ruisenor De Mexico, Inc.: 61
 - Victory Medical Center Pharmacy: 42
 - Boston Scientific Cork, Ltd.: 41
+- Medline Industries, LP: 23
 - ABC Compounding Co., Inc.: 19
-- PRITAM INTERNATIONAL PRIVATE LIMITED: 17
 
 ## Oldest open recalls
 
@@ -200,15 +208,15 @@ Longest-open recalls still marked Ongoing, by days since initiation.
 
 | Recall | Firm | Class | Initiated | Age (days) |
 | --- | --- | --- | --- | ---: |
-| Z-0321-2027 | Illumina, Inc. | Class II | 2024-05-08 | 930 |
-| Z-0324-2027 | Illumina, Inc. | Class II | 2024-05-08 | 930 |
-| Z-0323-2027 | Illumina, Inc. | Class II | 2024-05-08 | 930 |
-| Z-0322-2027 | Illumina, Inc. | Class II | 2024-05-08 | 930 |
-| Z-0320-2027 | Illumina, Inc. | Class II | 2024-05-08 | 930 |
+| Z-0428-2027 | Philips Ultrasound, LLC | Class II | 2022-03-11 | 1720 |
+| Z-0321-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
+| Z-0324-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
+| Z-0323-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
+| Z-0322-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
 
 ## Source data notes
 
-Scope: the 394 recalls with a report date in the rolling window 2026-10-25 to 2026-11-24, not the whole archive (462 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 394: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
+Scope: the 509 recalls with a report date in the rolling window 2026-10-26 to 2026-11-25, not the whole archive (577 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 509: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 
@@ -221,16 +229,16 @@ Firms with 3+ recalls in the window (a supplier-risk signal).
 | El Ruisenor De Mexico, Inc. | 61 | 5 |
 | Victory Medical Center Pharmacy | 42 | 0 |
 | Boston Scientific Cork, Ltd. | 41 | 0 |
+| Medline Industries, LP | 23 | 0 |
 | ABC Compounding Co., Inc. | 19 | 0 |
-| PRITAM INTERNATIONAL PRIVATE LIMITED | 17 | 0 |
 
 ## Highest-severity recalls in the window
 
-- **Class I** (20261111): Family Farmstead Dairy, LLC - Potential contamination with E. coli (pathogenic non-O157 STEC).
-- **Class I** (20261111): Krasnyi Oktyabr Inc - Contaminated with Listeria monocytogenes
-- **Class I** (20261111): Krasnyi Oktyabr Inc - Contaminated with Listeria monocytogenes
-- **Class I** (20261111): Lidl US TRADING - Listeria monocytogenes. The firm received positive test result of Listeria monocytogenes in the product.
-- **Class I** (20261111): Lockout Industries, LLC - FDA analysis revealed the presence of undeclared sildenafil.
+- **Class I** (20261118): IBeautiStore.com - Marketed without approved NDA/ANDA- FDA laboratory analysis found product to be tainted with undeclared ingredients: Dexamethasone, Diclofenac and Omeprazole.
+- **Class I** (20261118): Country Creek LLC - Products contain seed recalled from the supplier and may be contaminated with E. coli and/or Salmonella
+- **Class I** (20261118): D & M Smoked Fish, Inc. - May be contaminated with Clostridium botulinum
+- **Class I** (20261118): Fresh & Ready Foods LLC - Possible Listeria monocytogenes contamination.
+- **Class I** (20261118): Francisco Family Foods - Potential E. coli and Salmonella contamination
 
 ![Recalls per day](recalls_last_30d.png)
 

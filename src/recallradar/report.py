@@ -53,7 +53,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     slowest: list[dict] | None = None,
                     lag_dist: list[dict] | None = None,
                     firm_class_mix: list[dict] | None = None,
-                    date_gaps: dict | None = None) -> str:
+                    date_gaps: dict | None = None,
+                    lag_months: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -115,6 +116,11 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| From | To | Days |", "| --- | --- | ---: |"]
         for g in date_gaps["longest"]:
             lines.append(f"| {g['from']} | {g['to']} | {g['days']} |")
+    if lag_months:
+        lines += ["", "Median lag by report month (months with 10+ recalls; reflects openFDA batch timing):", "",
+                  "| Report month | Recalls | Median lag (days) |", "| --- | ---: | ---: |"]
+        for m in lag_months:
+            lines.append(f"| {m['month']} | {m['recalls']} | {m['median_lag']:g} |")
     if lag_by_product:
         lines += ["", "Lag by product type (days, slowest first):", "",
                   "| Product type | Recalls | Median lag | p90 |",

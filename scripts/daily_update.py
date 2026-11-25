@@ -111,7 +111,8 @@ def main() -> None:
                                slowest=analyze.slowest_reported(records),
                                lag_dist=analyze.lag_distribution(records),
                                firm_class_mix=analyze.class_mix_by_firm(records),
-                               date_gaps=analyze.report_date_gaps(records)),
+                               date_gaps=analyze.report_date_gaps(records),
+                               lag_months=analyze.lag_by_report_month(records)),
         encoding="utf-8",
     )
     if report.plot_daily_counts(records, REPORTS / "recalls_last_30d.png",
