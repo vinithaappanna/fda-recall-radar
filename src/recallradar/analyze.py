@@ -547,3 +547,24 @@ def status_by_classification(records: list[dict]) -> list[dict]:
     order = {"Class I": 0, "Class II": 1, "Class III": 2}
     return [{"classification": c, "recalls": n, "ongoing": o, "ongoing_share": round(o / n, 4)}
             for c, (n, o) in sorted(tally.items(), key=lambda kv: (order.get(kv[0], 3), kv[0]))]
+
+
+def firm_month_recurrence(history: list[dict], n: int = 5) -> dict:
+    """Firms appearing in the archive in two or more distinct report months.
+    Returns how many firms recalled at all, how many recurred, and the top n
+    recurring firms by months then recalls. Firm names are matched after
+    trimming and upper-casing only (no fuzzy matching), and the archive only
+    spans the period since this project started, so recurrence is a lower bound."""
+    firms: dict[str, dict] = {}
+    for rec in history:
+        name = (rec.get("recalling_firm") or "").strip().upper()
+        month = str(rec.get("report_date") or "")[:6]
+        if not name or len(month) != 6 or not month.isdigit():
+            continue
+        f = firms.setdefault(name, {"recalls": 0, "months": set()})
+        f["recalls"] += 1
+        f["months"].add(month)
+    repeat = [(k, v) for k, v in firms.items() if len(v["months"]) >= 2]
+    repeat.sort(key=lambda kv: (-len(kv[1]["months"]), -kv[1]["recalls"], kv[0]))
+    return {"firms": len(firms), "repeat_firms": len(repeat),
+            "top": [{"firm": k, "months": len(v["months"]), "recalls": v["recalls"]} for k, v in repeat[:n]]}

@@ -626,3 +626,16 @@ def test_status_by_classification_order_unknown_and_render():
     assert analyze.status_by_classification([]) == []
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), status_classes=out)
     assert "| Class I | 3 | 2 | 66.7% |" in md
+
+
+def test_firm_month_recurrence_distinct_months_and_render():
+    from recallradar import analyze, report
+    h = [{"recalling_firm": " acme ", "report_date": "20260905"}, {"recalling_firm": "ACME", "report_date": "20260906"},
+         {"recalling_firm": "Acme", "report_date": "20261010"}, {"recalling_firm": "Beta", "report_date": "20261010"},
+         {"recalling_firm": "Beta", "report_date": "20261011"}, {"recalling_firm": "", "report_date": "20261011"},
+         {"recalling_firm": "Gamma", "report_date": "bad"}]
+    out = analyze.firm_month_recurrence(h)
+    assert out == {"firms": 2, "repeat_firms": 1, "top": [{"firm": "ACME", "months": 2, "recalls": 3}]}
+    assert analyze.firm_month_recurrence([]) == {"firms": 0, "repeat_firms": 0, "top": []}
+    md = report.render_markdown(analyze.summarize(h[:3]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), recurrence=out)
+    assert "| ACME | 2 | 3 |" in md and "lower bound" in md

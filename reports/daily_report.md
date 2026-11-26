@@ -1,8 +1,10 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-26 to 2026-11-25 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-25 20:04 UTC.
+Window: 2026-10-27 to 2026-11-26 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-26 12:05 UTC.
 
 **509 recalls** across 4 active days.
+
+> **Stale upstream data:** openFDA has not published for over 7 days (device 8 days, drug 8 days, food 8 days). Recent days may be missing here until it does.
 
 ## By severity
 
@@ -73,6 +75,16 @@ Recall status by classification (current window; Ongoing means FDA has not yet t
 | Class II | 401 | 374 | 93.3% |
 | Class III | 37 | 7 | 18.9% |
 | Not Yet Classified | 2 | 2 | 100.0% |
+
+Firms recurring across report months in the archive: 12 of 176 firms appear in two or more report months (exact name match after trimming, archive period only, so a lower bound):
+
+| Firm | Report months | Recalls |
+| --- | ---: | ---: |
+| MEDLINE INDUSTRIES, LP | 2 | 42 |
+| BAXTER HEALTHCARE CORPORATION | 2 | 8 |
+| AVID MEDICAL, INC. | 2 | 4 |
+| HIKMA PHARMACEUTICALS USA INC. | 2 | 3 |
+| AMERICAN HEALTH PACKAGING | 2 | 2 |
 
 Archive coverage by report month (whole archive; early months are partial because the archive only holds recalls fetched since this project started):
 
@@ -183,10 +195,10 @@ Days since initiation for recalls still marked Ongoing.
 
 | Class | Open | Median age (days) | Oldest (days) | Open > 90 days |
 | --- | ---: | ---: | ---: | ---: |
-| Class I | 61 | 62 | 273 | 5 |
-| Class II | 374 | 62 | 1720 | 27 |
-| Class III | 7 | 48 | 55 | 0 |
-| Not Yet Classified | 2 | 142 | 201 | 1 |
+| Class I | 61 | 63 | 274 | 5 |
+| Class II | 374 | 63 | 1721 | 27 |
+| Class III | 7 | 49 | 56 | 0 |
+| Not Yet Classified | 2 | 143 | 202 | 1 |
 
 ## Reason themes by month
 
@@ -224,15 +236,15 @@ Longest-open recalls still marked Ongoing, by days since initiation.
 
 | Recall | Firm | Class | Initiated | Age (days) |
 | --- | --- | --- | --- | ---: |
-| Z-0428-2027 | Philips Ultrasound, LLC | Class II | 2022-03-11 | 1720 |
-| Z-0321-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
-| Z-0324-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
-| Z-0323-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
-| Z-0322-2027 | Illumina, Inc. | Class II | 2024-05-08 | 931 |
+| Z-0428-2027 | Philips Ultrasound, LLC | Class II | 2022-03-11 | 1721 |
+| Z-0321-2027 | Illumina, Inc. | Class II | 2024-05-08 | 932 |
+| Z-0324-2027 | Illumina, Inc. | Class II | 2024-05-08 | 932 |
+| Z-0323-2027 | Illumina, Inc. | Class II | 2024-05-08 | 932 |
+| Z-0322-2027 | Illumina, Inc. | Class II | 2024-05-08 | 932 |
 
 ## Source data notes
 
-Scope: the 509 recalls with a report date in the rolling window 2026-10-26 to 2026-11-25, not the whole archive (577 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 509: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
+Scope: the 509 recalls with a report date in the rolling window 2026-10-27 to 2026-11-26, not the whole archive (577 recalls keyed by recall_number, which keeps recalls after they leave the window); 2 of the window recalls have no recall_number and are not in the archive. Of the 509: 0 lack an initiation date, 0 have an unparseable date, 0 are reported before their initiation date, 0 lack a classification. Lag and age sections skip those records.
 
 _Window total includes 2 recalls with no recall_number; they are reported here but cannot be keyed into the archive._
 

@@ -56,7 +56,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     date_gaps: dict | None = None,
                     lag_months: list[dict] | None = None,
                     archive_months: list[dict] | None = None,
-                    status_classes: list[dict] | None = None) -> str:
+                    status_classes: list[dict] | None = None,
+                    recurrence: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -129,6 +130,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if recurrence and recurrence["top"]:
+        lines += ["", f"Firms recurring across report months in the archive: {recurrence['repeat_firms']} of {recurrence['firms']} firms "
+                  "appear in two or more report months (exact name match after trimming, archive period only, so a lower bound):", "",
+                  "| Firm | Report months | Recalls |", "| --- | ---: | ---: |"]
+        for r in recurrence["top"]:
+            lines.append(f"| {r['firm']} | {r['months']} | {r['recalls']} |")
     if archive_months:
         lines += ["", "Archive coverage by report month (whole archive; early months are partial because "
                   "the archive only holds recalls fetched since this project started):", "",
