@@ -639,3 +639,19 @@ def test_firm_month_recurrence_distinct_months_and_render():
     assert analyze.firm_month_recurrence([]) == {"firms": 0, "repeat_firms": 0, "top": []}
     md = report.render_markdown(analyze.summarize(h[:3]), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), recurrence=out)
     assert "| ACME | 2 | 3 |" in md and "lower bound" in md
+
+
+def test_wilson_interval_known_values_and_theme_intervals_render():
+    from recallradar import analyze, report
+    import datetime as dt
+    assert analyze.wilson_interval(0, 0) == (0.0, 0.0)
+    lo, hi = analyze.wilson_interval(5, 10)
+    assert (lo, hi) == (0.2366, 0.7634)
+    assert analyze.wilson_interval(10, 10)[1] == 1.0
+    recs = [{"classification": "Class I" if i < 4 else "Class II", "reason_for_recall": "Salmonella contamination"} for i in range(10)]
+    recs += [{"classification": "Class II", "reason_for_recall": "Mislabeled carton label error"}] * 3
+    out = analyze.theme_class_i_intervals(recs)
+    assert len(out) == 1 and out[0]["recalls"] == 10 and out[0]["class_i"] == 4 and out[0]["share"] == 0.4   # small theme skipped
+    assert out[0]["low"] < 0.4 < out[0]["high"]
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), theme_intervals=out)
+    assert "| 10 | 4 | 40.0% |" in md and "Wilson" in md

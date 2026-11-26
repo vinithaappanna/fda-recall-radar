@@ -57,7 +57,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     lag_months: list[dict] | None = None,
                     archive_months: list[dict] | None = None,
                     status_classes: list[dict] | None = None,
-                    recurrence: dict | None = None) -> str:
+                    recurrence: dict | None = None,
+                    theme_intervals: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -130,6 +131,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if theme_intervals:
+        lines += ["", "Class I share by reason theme with 95% Wilson intervals (themes under 10 recalls skipped; "
+                  "themes come from a keyword heuristic, not an FDA taxonomy; heavily overlapping intervals are weak evidence of a real difference):", "",
+                  "| Theme | Recalls | Class I | Share | 95% interval |", "| --- | ---: | ---: | ---: | --- |"]
+        for r in theme_intervals:
+            lines.append(f"| {r['theme']} | {r['recalls']} | {r['class_i']} | {r['share']:.1%} | {r['low']:.1%} to {r['high']:.1%} |")
     if recurrence and recurrence["top"]:
         lines += ["", f"Firms recurring across report months in the archive: {recurrence['repeat_firms']} of {recurrence['firms']} firms "
                   "appear in two or more report months (exact name match after trimming, archive period only, so a lower bound):", "",

@@ -568,3 +568,28 @@ def firm_month_recurrence(history: list[dict], n: int = 5) -> dict:
     repeat.sort(key=lambda kv: (-len(kv[1]["months"]), -kv[1]["recalls"], kv[0]))
     return {"firms": len(firms), "repeat_firms": len(repeat),
             "top": [{"firm": k, "months": len(v["months"]), "recalls": v["recalls"]} for k, v in repeat[:n]]}
+
+
+def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval for a proportion; (0.0, 0.0) when n is 0."""
+    if n <= 0:
+        return (0.0, 0.0)
+    p = successes / n
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / denom
+    return (round(max(0.0, centre - half), 4), round(min(1.0, centre + half), 4))
+
+
+def theme_class_i_intervals(records: list[dict], min_recalls: int = 10) -> list[dict]:
+    """Class I share per reason theme with a 95% Wilson interval. Themes with
+    fewer than min_recalls recalls are skipped (an interval on a handful of
+    recalls says little). Sorted by share, then recalls, then name."""
+    out = []
+    for row in reason_theme_counts(records):
+        if row["recalls"] < min_recalls:
+            continue
+        lo, hi = wilson_interval(row["class_i"], row["recalls"])
+        out.append({"theme": row["theme"], "recalls": row["recalls"], "class_i": row["class_i"],
+                    "share": round(row["class_i"] / row["recalls"], 4), "low": lo, "high": hi})
+    return sorted(out, key=lambda r: (-r["share"], -r["recalls"], r["theme"]))

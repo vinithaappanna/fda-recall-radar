@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-27 to 2026-11-26 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-26 12:05 UTC.
+Window: 2026-10-27 to 2026-11-26 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-26 15:04 UTC.
 
 **509 recalls** across 4 active days.
 
@@ -75,6 +75,20 @@ Recall status by classification (current window; Ongoing means FDA has not yet t
 | Class II | 401 | 374 | 93.3% |
 | Class III | 37 | 7 | 18.9% |
 | Not Yet Classified | 2 | 2 | 100.0% |
+
+Class I share by reason theme with 95% Wilson intervals (themes under 10 recalls skipped; themes come from a keyword heuristic, not an FDA taxonomy; heavily overlapping intervals are weak evidence of a real difference):
+
+| Theme | Recalls | Class I | Share | 95% interval |
+| --- | ---: | ---: | ---: | --- |
+| Contamination / particulate | 50 | 18 | 36.0% | 24.1% to 49.9% |
+| Device defect / performance | 104 | 26 | 25.0% | 17.7% to 34.1% |
+| Labeling / undeclared allergen | 101 | 19 | 18.8% | 12.4% to 27.5% |
+| Potency / dissolution / stability | 19 | 3 | 15.8% | 5.5% to 37.6% |
+| Other | 73 | 3 | 4.1% | 1.4% to 11.4% |
+| Manufacturing practice (CGMP) | 85 | 0 | 0.0% | 0.0% to 4.3% |
+| Software / cybersecurity | 36 | 0 | 0.0% | 0.0% to 9.6% |
+| Sterility | 27 | 0 | 0.0% | 0.0% to 12.5% |
+| Regulatory clearance | 14 | 0 | 0.0% | 0.0% to 21.5% |
 
 Firms recurring across report months in the archive: 12 of 176 firms appear in two or more report months (exact name match after trimming, archive period only, so a lower bound):
 
