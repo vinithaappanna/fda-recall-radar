@@ -593,3 +593,29 @@ def theme_class_i_intervals(records: list[dict], min_recalls: int = 10) -> list[
         out.append({"theme": row["theme"], "recalls": row["recalls"], "class_i": row["class_i"],
                     "share": round(row["class_i"] / row["recalls"], 4), "low": lo, "high": hi})
     return sorted(out, key=lambda r: (-r["share"], -r["recalls"], r["theme"]))
+
+
+def open_age_by_product_type(records: list[dict], today: dt.date, long_open_days: int = 90) -> list[dict]:
+    """Still-open (Ongoing) recalls per product type: count, median age in days
+    since initiation, oldest, and how many are open longer than long_open_days.
+    Same date rules as open_recall_age (missing, unparseable or future initiation
+    dates are skipped). Largest open count first, ties by name. Open means FDA
+    has not terminated the recall, not that product is still on shelves."""
+    ages: dict[str, list[int]] = {}
+    for rec in records:
+        if (rec.get("status") or "").lower() != "ongoing":
+            continue
+        try:
+            age = (today - parse_report_date(rec.get("recall_initiation_date") or "")).days
+        except ValueError:
+            continue
+        if age >= 0:
+            ages.setdefault(rec.get("product_type") or "Unknown", []).append(age)
+    out = []
+    for ptype, vals in ages.items():
+        a = sorted(vals)
+        mid = len(a) // 2
+        median = a[mid] if len(a) % 2 else (a[mid - 1] + a[mid]) / 2
+        out.append({"product_type": ptype, "open": len(a), "median_age_days": median,
+                    "oldest_days": a[-1], "long_open": sum(x > long_open_days for x in a)})
+    return sorted(out, key=lambda r: (-r["open"], r["product_type"]))

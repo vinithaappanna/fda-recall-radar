@@ -114,6 +114,7 @@ def main() -> None:
                                date_gaps=analyze.report_date_gaps(records),
                                lag_months=analyze.lag_by_report_month(records),
                                archive_months=analyze.archive_by_report_month(list(history.values())),
+                               open_by_type=analyze.open_age_by_product_type(records, dt.date.today()),
                                theme_intervals=analyze.theme_class_i_intervals(records),
                                recurrence=analyze.firm_month_recurrence(list(history.values())),
                                status_classes=analyze.status_by_classification(records)),

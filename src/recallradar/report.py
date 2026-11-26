@@ -58,7 +58,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     archive_months: list[dict] | None = None,
                     status_classes: list[dict] | None = None,
                     recurrence: dict | None = None,
-                    theme_intervals: list[dict] | None = None) -> str:
+                    theme_intervals: list[dict] | None = None,
+                    open_by_type: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -131,6 +132,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if open_by_type:
+        lines += ["", "Open recalls by product type (Ongoing status, age since initiation; open means FDA has not terminated "
+                  "the recall, not that product is still on shelves):", "",
+                  "| Product type | Open | Median age (days) | Oldest (days) | Open over 90 days |", "| --- | ---: | ---: | ---: | ---: |"]
+        for r in open_by_type:
+            lines.append(f"| {r['product_type']} | {r['open']} | {r['median_age_days']:g} | {r['oldest_days']} | {r['long_open']} |")
     if theme_intervals:
         lines += ["", "Class I share by reason theme with 95% Wilson intervals (themes under 10 recalls skipped; "
                   "themes come from a keyword heuristic, not an FDA taxonomy; heavily overlapping intervals are weak evidence of a real difference):", "",

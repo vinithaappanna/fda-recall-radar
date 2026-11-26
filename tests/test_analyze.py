@@ -655,3 +655,18 @@ def test_wilson_interval_known_values_and_theme_intervals_render():
     assert out[0]["low"] < 0.4 < out[0]["high"]
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), theme_intervals=out)
     assert "| 10 | 4 | 40.0% |" in md and "Wilson" in md
+
+
+def test_open_age_by_product_type_rules_and_render():
+    from recallradar import analyze, report
+    today = dt.date(2026, 11, 26)
+    def r(ptype, init, status="Ongoing"):
+        return {"product_type": ptype, "recall_initiation_date": init, "status": status}
+    recs = [r("Drugs", "20260826"), r("Drugs", "20261026"), r("Drugs", "20250101", "Terminated"),
+            r("Devices", "20261101"), r("Devices", "20270101"), r("Devices", "junk"), r("Devices", "")]
+    out = analyze.open_age_by_product_type(recs, today)
+    assert out[0] == {"product_type": "Drugs", "open": 2, "median_age_days": 61.5, "oldest_days": 92, "long_open": 1}
+    assert out[1] == {"product_type": "Devices", "open": 1, "median_age_days": 25, "oldest_days": 25, "long_open": 0}
+    assert analyze.open_age_by_product_type([], today) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), open_by_type=out)
+    assert "| Drugs | 2 | 61.5 | 92 | 1 |" in md

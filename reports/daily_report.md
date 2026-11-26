@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-27 to 2026-11-26 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-26 15:04 UTC.
+Window: 2026-10-27 to 2026-11-26 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-26 20:04 UTC.
 
 **509 recalls** across 4 active days.
 
@@ -75,6 +75,14 @@ Recall status by classification (current window; Ongoing means FDA has not yet t
 | Class II | 401 | 374 | 93.3% |
 | Class III | 37 | 7 | 18.9% |
 | Not Yet Classified | 2 | 2 | 100.0% |
+
+Open recalls by product type (Ongoing status, age since initiation; open means FDA has not terminated the recall, not that product is still on shelves):
+
+| Product type | Open | Median age (days) | Oldest (days) | Open over 90 days |
+| --- | ---: | ---: | ---: | ---: |
+| Devices | 265 | 70 | 1721 | 26 |
+| Drugs | 132 | 45 | 218 | 2 |
+| Food | 47 | 51 | 274 | 5 |
 
 Class I share by reason theme with 95% Wilson intervals (themes under 10 recalls skipped; themes come from a keyword heuristic, not an FDA taxonomy; heavily overlapping intervals are weak evidence of a real difference):
 
