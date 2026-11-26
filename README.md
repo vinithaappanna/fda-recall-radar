@@ -51,3 +51,7 @@ published yet are shaded on the chart.
 
 openFDA data is not validated for medical decisions. This project is for
 learning and portfolio purposes.
+
+## Committing
+
+`scripts/safe_commit.sh "message"` runs the test suite and commits only if it passes (fail-closed: a failing test, a collection error or no passing tests blocks the commit). It does not push.
