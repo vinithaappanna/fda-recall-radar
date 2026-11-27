@@ -1,6 +1,6 @@
 # FDA Recall Radar - daily report
 
-Window: 2026-10-28 to 2026-11-27 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-27 15:04 UTC.
+Window: 2026-10-28 to 2026-11-27 (by report date). openFDA last_updated by endpoint: device 2026-11-18, drug 2026-11-18, food 2026-11-18. Generated 2026-11-27 20:04 UTC.
 
 **509 recalls** across 4 active days.
 
@@ -75,6 +75,14 @@ Recall status by classification (current window; Ongoing means FDA has not yet t
 | Class II | 401 | 374 | 93.3% |
 | Class III | 37 | 7 | 18.9% |
 | Not Yet Classified | 2 | 2 | 100.0% |
+
+Class I share by product type with 95% Wilson intervals (types under 10 recalls skipped; overlapping intervals are weak evidence of a real difference):
+
+| Product type | Recalls | Class I | Share | 95% interval |
+| --- | ---: | ---: | ---: | --- |
+| Food | 112 | 32 | 28.6% | 21.0% to 37.5% |
+| Devices | 265 | 32 | 12.1% | 8.7% to 16.6% |
+| Drugs | 132 | 5 | 3.8% | 1.6% to 8.6% |
 
 Class I concentration: 69 Class I recalls from 33 firms; the top 3 firms hold 43.5% (window only, exact firm names):
 

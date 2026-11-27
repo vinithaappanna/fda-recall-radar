@@ -696,3 +696,16 @@ def test_class_i_firm_concentration_shares_ties_and_render():
     assert analyze.class_i_firm_concentration([]) == {"class_i": 0, "firms": 0, "top_share": 0.0, "top": []}
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), class_i_conc=out)
     assert "| A | 2 |" in md and "50.0%" in md
+
+
+def test_product_class_i_intervals_skip_small_sort_and_render():
+    from recallradar import analyze, report
+    def r(p, c): return {"product_type": p, "classification": c}
+    recs = [r("Drugs", "Class I")] * 5 + [r("Drugs", "Class II")] * 5 + [r("Food", "Class I")] * 2 + [r("Devices", "Class II")] * 12
+    out = analyze.product_class_i_intervals(recs)
+    assert [o["product_type"] for o in out] == ["Drugs", "Devices"]          # Food skipped (2 recalls)
+    assert out[0]["share"] == 0.5 and (out[0]["low"], out[0]["high"]) == (0.2366, 0.7634)
+    assert out[1]["share"] == 0.0 and out[1]["low"] == 0.0
+    assert analyze.product_class_i_intervals([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), product_intervals=out)
+    assert "| Drugs | 10 | 5 | 50.0% | 23.7% to 76.3% |" in md

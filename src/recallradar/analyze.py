@@ -658,3 +658,20 @@ def class_i_firm_concentration(records: list[dict], top: int = 3) -> dict:
     return {"class_i": total, "firms": len(counts),
             "top_share": round(sum(n for _f, n in ranked) / total, 4) if total else 0.0,
             "top": [{"firm": f, "class_i": n} for f, n in ranked]}
+
+
+def product_class_i_intervals(records: list[dict], min_recalls: int = 10) -> list[dict]:
+    """Class I share per product type with a 95% Wilson interval. Product types
+    under min_recalls are skipped. Sorted by share, recalls, name."""
+    tally: dict[str, list[int]] = {}
+    for rec in records:
+        t = tally.setdefault(rec.get("product_type") or "Unknown", [0, 0])
+        t[0] += 1
+        t[1] += rec.get("classification") == "Class I"
+    out = []
+    for ptype, (n, k) in tally.items():
+        if n < min_recalls:
+            continue
+        lo, hi = wilson_interval(k, n)
+        out.append({"product_type": ptype, "recalls": n, "class_i": k, "share": round(k / n, 4), "low": lo, "high": hi})
+    return sorted(out, key=lambda r: (-r["share"], -r["recalls"], r["product_type"]))
