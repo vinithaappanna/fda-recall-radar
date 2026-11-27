@@ -670,3 +670,17 @@ def test_open_age_by_product_type_rules_and_render():
     assert analyze.open_age_by_product_type([], today) == []
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), open_by_type=out)
     assert "| Drugs | 2 | 61.5 | 92 | 1 |" in md
+
+
+def test_initiated_vs_reported_by_month_counts_and_skips_bad_dates():
+    from recallradar import analyze, report
+    def r(init, rep):
+        return {"recall_initiation_date": init, "report_date": rep}
+    recs = [r("20260920", "20261005"), r("20261001", "20261006"), r("20261015", "20261105"), r("junk", "20261105"), r("", "20261105")]
+    out = analyze.initiated_vs_reported_by_month(recs)
+    assert out == [{"month": "2026-09", "initiated": 1, "reported": 0},
+                   {"month": "2026-10", "initiated": 2, "reported": 2},
+                   {"month": "2026-11", "initiated": 0, "reported": 1}]
+    assert analyze.initiated_vs_reported_by_month([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), init_vs_rep=out)
+    assert "| 2026-10 | 2 | 2 |" in md

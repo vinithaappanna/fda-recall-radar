@@ -59,7 +59,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     status_classes: list[dict] | None = None,
                     recurrence: dict | None = None,
                     theme_intervals: list[dict] | None = None,
-                    open_by_type: list[dict] | None = None) -> str:
+                    open_by_type: list[dict] | None = None,
+                    init_vs_rep: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -132,6 +133,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if init_vs_rep:
+        lines += ["", "Recalls by initiation month vs report month (window recalls with both dates; the latest initiation "
+                  "months are incomplete because reports arrive late, and old initiations appear only once reported):", "",
+                  "| Month | Initiated | Reported |", "| --- | ---: | ---: |"]
+        for m in init_vs_rep[-8:]:
+            lines.append(f"| {m['month']} | {m['initiated']} | {m['reported']} |")
     if open_by_type:
         lines += ["", "Open recalls by product type (Ongoing status, age since initiation; open means FDA has not terminated "
                   "the recall, not that product is still on shelves):", "",

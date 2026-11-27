@@ -619,3 +619,25 @@ def open_age_by_product_type(records: list[dict], today: dt.date, long_open_days
         out.append({"product_type": ptype, "open": len(a), "median_age_days": median,
                     "oldest_days": a[-1], "long_open": sum(x > long_open_days for x in a)})
     return sorted(out, key=lambda r: (-r["open"], r["product_type"]))
+
+
+def initiated_vs_reported_by_month(records: list[dict], min_month_recalls: int = 1) -> list[dict]:
+    """Recalls per month by initiation date next to the same recalls by report
+    date. Initiation can precede the report by weeks or months, so the two
+    views differ: the report-month view reflects publication timing, the
+    initiation view reflects when firms acted. Records need both dates to be
+    parseable; others are skipped. Months sorted ascending; only months seen in
+    either view. Recent initiation months are incomplete (late reports)."""
+    init: dict[str, int] = {}
+    rep: dict[str, int] = {}
+    for rec in records:
+        try:
+            d_init = parse_report_date(rec.get("recall_initiation_date") or "")
+            d_rep = parse_report_date(rec.get("report_date") or "")
+        except ValueError:
+            continue
+        init[d_init.strftime("%Y-%m")] = init.get(d_init.strftime("%Y-%m"), 0) + 1
+        rep[d_rep.strftime("%Y-%m")] = rep.get(d_rep.strftime("%Y-%m"), 0) + 1
+    months = sorted(set(init) | set(rep))
+    return [{"month": m, "initiated": init.get(m, 0), "reported": rep.get(m, 0)}
+            for m in months if init.get(m, 0) + rep.get(m, 0) >= min_month_recalls]
