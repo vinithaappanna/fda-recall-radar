@@ -641,3 +641,20 @@ def initiated_vs_reported_by_month(records: list[dict], min_month_recalls: int =
     months = sorted(set(init) | set(rep))
     return [{"month": m, "initiated": init.get(m, 0), "reported": rep.get(m, 0)}
             for m in months if init.get(m, 0) + rep.get(m, 0) >= min_month_recalls]
+
+
+def class_i_firm_concentration(records: list[dict], top: int = 3) -> dict:
+    """How concentrated Class I recalls are among firms: total Class I recalls,
+    firms with any, and the share held by the top `top` firms (ties by name).
+    Same firm-name handling as the other firm views: exact name, blank grouped
+    as Unknown."""
+    counts: dict[str, int] = {}
+    for rec in records:
+        if rec.get("classification") == "Class I":
+            name = rec.get("recalling_firm") or "Unknown"
+            counts[name] = counts.get(name, 0) + 1
+    total = sum(counts.values())
+    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:top]
+    return {"class_i": total, "firms": len(counts),
+            "top_share": round(sum(n for _f, n in ranked) / total, 4) if total else 0.0,
+            "top": [{"firm": f, "class_i": n} for f, n in ranked]}

@@ -684,3 +684,15 @@ def test_initiated_vs_reported_by_month_counts_and_skips_bad_dates():
     assert analyze.initiated_vs_reported_by_month([]) == []
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), init_vs_rep=out)
     assert "| 2026-10 | 2 | 2 |" in md
+
+
+def test_class_i_firm_concentration_shares_ties_and_render():
+    from recallradar import analyze, report
+    recs = [{"classification": "Class I", "recalling_firm": f} for f in ["B", "A", "A", "C", "D"]]
+    recs += [{"classification": "Class II", "recalling_firm": "A"}, {"classification": "Class I"}]
+    out = analyze.class_i_firm_concentration(recs, top=2)
+    assert out == {"class_i": 6, "firms": 5, "top_share": 0.5,
+                   "top": [{"firm": "A", "class_i": 2}, {"firm": "B", "class_i": 1}]}
+    assert analyze.class_i_firm_concentration([]) == {"class_i": 0, "firms": 0, "top_share": 0.0, "top": []}
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), class_i_conc=out)
+    assert "| A | 2 |" in md and "50.0%" in md

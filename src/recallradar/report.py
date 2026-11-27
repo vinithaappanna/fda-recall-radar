@@ -60,7 +60,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     recurrence: dict | None = None,
                     theme_intervals: list[dict] | None = None,
                     open_by_type: list[dict] | None = None,
-                    init_vs_rep: list[dict] | None = None) -> str:
+                    init_vs_rep: list[dict] | None = None,
+                    class_i_conc: dict | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -133,6 +134,13 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if class_i_conc and class_i_conc["class_i"]:
+        c = class_i_conc
+        lines += ["", f"Class I concentration: {c['class_i']} Class I recalls from {c['firms']} firms; the top {len(c['top'])} firms "
+                  f"hold {c['top_share']:.1%} (window only, exact firm names):", "",
+                  "| Firm | Class I recalls |", "| --- | ---: |"]
+        for f in c["top"]:
+            lines.append(f"| {f['firm']} | {f['class_i']} |")
     if init_vs_rep:
         lines += ["", "Recalls by initiation month vs report month (window recalls with both dates; the latest initiation "
                   "months are incomplete because reports arrive late, and old initiations appear only once reported):", "",
