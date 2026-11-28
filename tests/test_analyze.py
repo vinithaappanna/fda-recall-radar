@@ -709,3 +709,16 @@ def test_product_class_i_intervals_skip_small_sort_and_render():
     assert analyze.product_class_i_intervals([]) == []
     md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), product_intervals=out)
     assert "| Drugs | 10 | 5 | 50.0% | 23.7% to 76.3% |" in md
+
+
+def test_ongoing_share_with_interval_skips_small_sorts_and_renders():
+    from recallradar import analyze, report
+    def r(p, s): return {"product_type": p, "status": s}
+    recs = [r("Drugs", "Ongoing")] * 5 + [r("Drugs", "Terminated")] * 5 + [r("Food", "ongoing")] * 12 + [r("Devices", "Ongoing")] * 3
+    out = analyze.ongoing_share_with_interval(recs)
+    assert [o["product_type"] for o in out] == ["Food", "Drugs"]               # Devices skipped (3 recalls)
+    assert out[1]["share"] == 0.5 and (out[1]["low"], out[1]["high"]) == (0.2366, 0.7634)
+    assert out[0]["share"] == 1.0 and out[0]["high"] == 1.0
+    assert analyze.ongoing_share_with_interval([]) == []
+    md = report.render_markdown(analyze.summarize(recs), [], dt.date(2026, 11, 1), dt.date(2026, 11, 18), ongoing_intervals=out)
+    assert "| Drugs | 10 | 5 | 50.0% | 23.7% to 76.3% |" in md and "mixes status with recall age" in md

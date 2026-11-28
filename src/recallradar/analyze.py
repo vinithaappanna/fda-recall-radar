@@ -675,3 +675,21 @@ def product_class_i_intervals(records: list[dict], min_recalls: int = 10) -> lis
         lo, hi = wilson_interval(k, n)
         out.append({"product_type": ptype, "recalls": n, "class_i": k, "share": round(k / n, 4), "low": lo, "high": hi})
     return sorted(out, key=lambda r: (-r["share"], -r["recalls"], r["product_type"]))
+
+
+def ongoing_share_with_interval(records: list[dict], min_recalls: int = 10) -> list[dict]:
+    """Ongoing share per product type with a 95% Wilson interval; types under
+    min_recalls are skipped. Ongoing means FDA has not terminated the recall.
+    Sorted by share, recalls, name."""
+    tally: dict[str, list[int]] = {}
+    for rec in records:
+        t = tally.setdefault(rec.get("product_type") or "Unknown", [0, 0])
+        t[0] += 1
+        t[1] += (rec.get("status") or "").lower() == "ongoing"
+    out = []
+    for ptype, (n, k) in tally.items():
+        if n < min_recalls:
+            continue
+        lo, hi = wilson_interval(k, n)
+        out.append({"product_type": ptype, "recalls": n, "ongoing": k, "share": round(k / n, 4), "low": lo, "high": hi})
+    return sorted(out, key=lambda r: (-r["share"], -r["recalls"], r["product_type"]))

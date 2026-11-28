@@ -62,7 +62,8 @@ def render_markdown(summary: dict, spotlight: list[dict],
                     open_by_type: list[dict] | None = None,
                     init_vs_rep: list[dict] | None = None,
                     class_i_conc: dict | None = None,
-                    product_intervals: list[dict] | None = None) -> str:
+                    product_intervals: list[dict] | None = None,
+                    ongoing_intervals: list[dict] | None = None) -> str:
     generated_at = generated_at or dt.datetime.now(dt.timezone.utc)
     if endpoint_updated:
         parts = ", ".join(f"{ep} {d}" for ep, d in sorted(endpoint_updated.items()))
@@ -135,6 +136,12 @@ def render_markdown(summary: dict, spotlight: list[dict],
                   "| Classification | Recalls | Ongoing | Ongoing share |", "| --- | ---: | ---: | ---: |"]
         for c in status_classes:
             lines.append(f"| {c['classification']} | {c['recalls']} | {c['ongoing']} | {c['ongoing_share']:.1%} |")
+    if ongoing_intervals:
+        lines += ["", "Ongoing share by product type with 95% Wilson intervals (types under 10 recalls skipped; Ongoing means FDA has not "
+                  "terminated the recall; recent recalls are more likely to be open, so this mixes status with recall age):", "",
+                  "| Product type | Recalls | Ongoing | Share | 95% interval |", "| --- | ---: | ---: | ---: | --- |"]
+        for r in ongoing_intervals:
+            lines.append(f"| {r['product_type']} | {r['recalls']} | {r['ongoing']} | {r['share']:.1%} | {r['low']:.1%} to {r['high']:.1%} |")
     if product_intervals:
         lines += ["", "Class I share by product type with 95% Wilson intervals (types under 10 recalls skipped; "
                   "overlapping intervals are weak evidence of a real difference):", "",
